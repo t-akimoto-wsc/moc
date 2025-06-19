@@ -1,11 +1,19 @@
-// ▼ 開発 or 本番をここで切り替える
-const bool isProduction = false; // ← true にすると本番URLが使われる
+// constants.dart
 
-// ▼ ベースURLの切り替え
-const String baseUrl = isProduction
-    ? 'https://worthapp.worth-sc.jp/Itinerary/public' // 本番
-    : 'http://10.0.2.2/myapp'; // Androidエミュレータ用ローカル
+const bool isProduction = false;
 
-// ▼ 各エンドポイント
-const String loginEndpoint = '$baseUrl/login.php';
-const String registerEndpoint = '$baseUrl/register.php'; // 必要があれば
+const String baseUrl =
+    isProduction
+        ? 'https://worthapp.worth-sc.jp/Itinerary/public'
+        : 'http://10.0.2.2/myapp';
+
+class ApiEndpoints {
+  static const String login = '$baseUrl/login.php';
+  static const String register = '$baseUrl/register.php';
+}
+
+class AppMessages {
+  static const String errorInvalid = 'メールアドレスまたはパスワードが間違っています';
+  static const String errorEmpty = 'メールアドレスまたはパスワードが未入力です';
+  static const String errorSystemException = 'システムエラーが発生しました。管理者に連絡してください';
+}

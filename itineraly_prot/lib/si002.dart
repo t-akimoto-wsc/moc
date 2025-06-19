@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
+import 'si005.dart' as screen005;
+import 'widgets/common_logo_positioned.dart' as logo_positioned;
 
 void main() {
   runApp(const WorthApp());
@@ -14,7 +16,7 @@ class WorthApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Worth Login',
+      title: 'si002',
       theme: ThemeData(primarySwatch: Colors.indigo),
       home: const LoginScreen(),
     );
@@ -34,10 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   bool obscurePassword = true;
 
-  static const String errorInvalid = 'メールアドレスまたはパスワードが間違っています';
-  static const String errorEmpty = 'メールアドレスまたはパスワードが未入力です';
   String? errorMessage;
-
   bool isLoading = false;
 
   @override
@@ -46,21 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Positioned(
-            top: 20,
-            left: 30,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset('assets/images/logo.png', width: 40, height: 40),
-                const SizedBox(width: 8),
-                const Text(
-                  '旅リアン',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
+          const logo_positioned.CommonLogoPositioned(), // ← ここを修正
           Center(
             child: SingleChildScrollView(
               child: Padding(
@@ -70,15 +55,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
                     children: [
-                      const SizedBox(height: 60),
-
+                      const SizedBox(height: 80),
                       TextFormField(
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
                         autocorrect: false,
                         autofillHints: const [AutofillHints.email],
                         maxLength: 256,
-                        style: const TextStyle(color: Colors.black, fontSize: 14.0),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14.0,
+                        ),
                         decoration: const InputDecoration(
                           hintText: 'メールアドレス',
                           border: UnderlineInputBorder(),
@@ -91,15 +78,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                       ),
-
                       const SizedBox(height: 16),
-
                       TextFormField(
                         controller: passwordController,
                         obscureText: obscurePassword,
                         autocorrect: false,
                         maxLength: 32,
-                        style: const TextStyle(color: Colors.black, fontSize: 14.0),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14.0,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'パスワード',
                           border: const UnderlineInputBorder(),
@@ -124,9 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                       ),
-
                       const SizedBox(height: 12),
-
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
@@ -134,28 +120,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: const Text('パスワードを忘れた方はこちら'),
                         ),
                       ),
-
                       const SizedBox(height: 30),
-
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           fixedSize: const Size(200, 48),
                         ),
                         onPressed: isLoading ? null : _handleLogin,
-                        child: isLoading
-                            ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                            : const Text('ログイン'),
+                        child:
+                            isLoading
+                                ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                                : const Text('ログイン'),
                       ),
-
                       const SizedBox(height: 20),
-
                       if (errorMessage != null)
                         Text(
                           errorMessage!,
@@ -164,9 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 14.0,
                           ),
                         ),
-
                       const SizedBox(height: 30),
-
                       TextButton(
                         onPressed: () {},
                         child: const Text('アカウント新規作成'),
@@ -192,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final email = emailController.text.trim();
       final password = passwordController.text;
 
-      final url = Uri.parse('$baseUrl/login.php');
+      final url = Uri.parse(ApiEndpoints.login);
 
       try {
         final response = await http.post(
@@ -203,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (response.statusCode != 200) {
           setState(() {
-            errorMessage = 'システムエラーが発生しました。管理者に連絡してください (err=HTTP)';
+            errorMessage = AppMessages.errorSystemException;
             isLoading = false;
           });
           return;
@@ -215,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (resultCode == 1) {
           final token = jsonResponse['token'];
           if (token == null || token.isEmpty) {
-            throw Exception('Token missing');
+            throw Exception(AppMessages.errorSystemException);
           }
 
           final prefs = await SharedPreferences.getInstance();
@@ -226,34 +207,38 @@ class _LoginScreenState extends State<LoginScreen> {
             errorMessage = null;
           });
 
-          // TODO: 認証成功時の画面遷移処理
+          if (!mounted) return;
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const screen005.TopScreen(),
+            ),
+          );
         } else if (resultCode == 50) {
           setState(() {
-            errorMessage = errorEmpty;
+            errorMessage = AppMessages.errorEmpty;
             isLoading = false;
           });
         } else if (resultCode == 51 || resultCode == 52) {
           setState(() {
-            errorMessage = errorInvalid;
+            errorMessage = AppMessages.errorInvalid;
             isLoading = false;
           });
         } else {
           setState(() {
-            errorMessage =
-            'システムエラーが発生しました。管理者に連絡してください (err=$resultCode)';
+            errorMessage = AppMessages.errorSystemException;
             isLoading = false;
           });
         }
-      } catch (e) {
+      } catch (_) {
         setState(() {
-          errorMessage =
-          'システムエラーが発生しました。管理者に連絡してください (err=Exception)';
+          errorMessage = AppMessages.errorSystemException;
           isLoading = false;
         });
       }
     } else {
       setState(() {
-        errorMessage = errorEmpty;
+        errorMessage = AppMessages.errorEmpty;
         isLoading = false;
       });
     }
