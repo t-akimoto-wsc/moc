@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
+import 'si004.dart' as screen004;
 import 'si005.dart' as screen005;
 import 'widgets/common_logo_positioned.dart' as logo_positioned;
 
@@ -149,7 +150,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       const SizedBox(height: 30),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => const screen004.RegisterScreen()),
+                          );
+                        },
                         child: const Text('アカウント新規作成'),
                       ),
                     ],
