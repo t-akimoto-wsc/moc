@@ -13,7 +13,9 @@ class ApiEndpoints {
 }
 
 class AppMessages {
+  static const String success = 'アカウントが正常に作成されました';
   static const String errorInvalid = 'メールアドレスまたはパスワードが間違っています';
   static const String errorEmpty = 'メールアドレスまたはパスワードが未入力です';
+  static const String errorRegistered = '登録済みのメールアドレスです';
   static const String errorSystemException = 'システムエラーが発生しました。管理者に連絡してください';
 }
