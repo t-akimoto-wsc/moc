@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'constants.dart';
 import 'si002.dart' as screen002;
 import 'widgets/common_logo_positioned.dart' as logo_positioned;
@@ -194,8 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onPressed: () async {
                           final isValid = _formKey.currentState?.validate() ?? false;
                           if (isValid) {
-                            // final resultCode = await _handleRegister();
-                            final resultCode = 53;
+                            final resultCode = await _handleRegister();
                             if (!context.mounted || resultCode == null) return;
 
 
