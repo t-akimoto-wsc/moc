@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'widgets/common_logo_positioned.dart' as logo_positioned;
 import 'si002.dart' as screen002;
 
-class TopScreen extends StatelessWidget {
-  const TopScreen({super.key});
+class PasswordReset extends StatelessWidget {
+  const PasswordReset({super.key});
 
   @override
   Widget build(BuildContext context) {

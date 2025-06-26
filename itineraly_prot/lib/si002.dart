@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
+import 'si003.dart' as screen003;
+import 'si004.dart' as screen004;
 import 'si005.dart' as screen005;
 import 'widgets/common_logo_positioned.dart' as logo_positioned;
 
@@ -45,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          const logo_positioned.CommonLogoPositioned(), // ← ここを修正
+          const logo_positioned.CommonLogoPositioned(),
           Center(
             child: SingleChildScrollView(
               child: Padding(
@@ -116,7 +118,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        const screen003.PasswordReset(),
+                              ),
+                            );
+                          },
                           child: const Text('パスワードを忘れた方はこちら'),
                         ),
                       ),
@@ -149,7 +159,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       const SizedBox(height: 30),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const screen004.RegisterScreen(),
+                            ),
+                          );
+                        },
                         child: const Text('アカウント新規作成'),
                       ),
                     ],
@@ -185,7 +202,6 @@ class _LoginScreenState extends State<LoginScreen> {
         if (response.statusCode != 200) {
           setState(() {
             errorMessage = AppMessages.errorSystemException;
-            isLoading = false;
           });
           return;
         }
@@ -203,7 +219,6 @@ class _LoginScreenState extends State<LoginScreen> {
           await prefs.setString('jwt_token', token);
 
           setState(() {
-            isLoading = false;
             errorMessage = null;
           });
 
@@ -217,29 +232,24 @@ class _LoginScreenState extends State<LoginScreen> {
         } else if (resultCode == 50) {
           setState(() {
             errorMessage = AppMessages.errorEmpty;
-            isLoading = false;
           });
         } else if (resultCode == 51 || resultCode == 52) {
           setState(() {
             errorMessage = AppMessages.errorInvalid;
-            isLoading = false;
           });
         } else {
           setState(() {
             errorMessage = AppMessages.errorSystemException;
-            isLoading = false;
           });
         }
       } catch (_) {
         setState(() {
           errorMessage = AppMessages.errorSystemException;
-          isLoading = false;
         });
       }
     } else {
       setState(() {
         errorMessage = AppMessages.errorEmpty;
-        isLoading = false;
       });
     }
   }
