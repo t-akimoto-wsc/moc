@@ -16,7 +16,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
@@ -58,7 +59,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (value == null || value.trim().isEmpty) {
                             return 'メールアドレスが未入力です。';
                           }
-                          final emailRegex = RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$');
+                          final emailRegex = RegExp(
+                            r'^[\w\.-]+@[\w\.-]+\.\w+$',
+                          );
                           if (!emailRegex.hasMatch(value.trim())) {
                             return '正しいメールアドレスの形式で入力してください。';
                           }
@@ -81,7 +84,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           counterText: '',
                           suffixIcon: IconButton(
                             icon: Icon(
-                              obscurePassword ? Icons.visibility : Icons.visibility_off,
+                              obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
                             onPressed: () {
                               setState(() {
@@ -111,7 +116,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             return 'パスワードには数字を1文字以上含めてください。';
                           }
                           final allowedPattern = RegExp(
-                              r'^[a-zA-Z0-9`~!@#\$%\^&\*\(\)_\+\-=\{\}\[\]\\|:;\"<>,\.\?\/]+$');
+                            r'^[a-zA-Z0-9`~!@#\$%\^&\*\(\)_\+\-=\{\}\[\]\\|:;\"<>,\.\?\/]+$',
+                          );
                           if (!allowedPattern.hasMatch(password)) {
                             return '使用できない文字が含まれています';
                           }
@@ -133,11 +139,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           counterText: '',
                           suffixIcon: IconButton(
                             icon: Icon(
-                              obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                              obscureConfirmPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
                             onPressed: () {
                               setState(() {
-                                obscureConfirmPassword = !obscureConfirmPassword;
+                                obscureConfirmPassword =
+                                    !obscureConfirmPassword;
                               });
                             },
                           ),
@@ -163,19 +172,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 content: const SingleChildScrollView(
                                   child: Text(
                                     '■ 文字数：8文字以上～32文字以下\n'
-                                        '■ 条件：英小文字、英大文字、数字を最低1文字ずつ使用\n'
-                                        '■ 使用可能な文字：\n'
-                                        '・半角英数字（a〜z, A〜Z, 0〜9）\n'
-                                        '\n'
-                                        '・使用可能な記号：\n'
-                                        '` ˜ ! @ # \$ % ^ & * ( ) _ + - = { } [ ]\n'
-                                        '| : ; " < > , . ? /\n',
+                                    '■ 条件：英小文字、英大文字、数字を最低1文字ずつ使用\n'
+                                    '■ 使用可能な文字：\n'
+                                    '・半角英数字（a〜z, A〜Z, 0〜9）\n'
+                                    '\n'
+                                    '・使用可能な記号：\n'
+                                    '` ˜ ! @ # \$ % ^ & * ( ) _ + - = { } [ ]\n'
+                                    '| : ; " < > , . ? /\n',
                                     style: TextStyle(fontSize: 14),
                                   ),
                                 ),
                                 actions: [
                                   TextButton(
-                                    onPressed: () => Navigator.of(context).pop(),
+                                    onPressed:
+                                        () => Navigator.of(context).pop(),
                                     child: const Text('閉じる'),
                                   ),
                                 ],
@@ -191,12 +201,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           fixedSize: const Size(200, 48),
                         ),
                         onPressed: () async {
-                          final isValid = _formKey.currentState?.validate() ?? false;
+                          final isValid =
+                              _formKey.currentState?.validate() ?? false;
                           if (isValid) {
                             final resultCode = await _handleRegister();
                             if (!context.mounted || resultCode == null) return;
-
-
 
                             String message;
                             String title = 'アカウント作成';
@@ -209,7 +218,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(builder: (context) => const screen002.LoginScreen()),
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  const screen002.LoginScreen(),
+                                        ),
                                       );
                                     },
                                     child: const Text('ログイン画面へ戻る'),
@@ -237,14 +250,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 return AlertDialog(
                                   title: Text(title),
                                   content: Text(message),
-                                  actions: actions.isNotEmpty
-                                      ? actions
-                                      : [
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(),
-                                            child: const Text('OK'),
-                                          ),
-                                        ],
+                                  actions:
+                                      actions.isNotEmpty
+                                          ? actions
+                                          : [
+                                            TextButton(
+                                              onPressed:
+                                                  () =>
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop(),
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
                                 );
                               },
                             );
@@ -270,7 +288,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: TextButton(
                           onPressed: () {
                             Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => const screen002.LoginScreen()),
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => const screen002.LoginScreen(),
+                              ),
                             );
                           },
                           child: const Text('ログイン画面へ戻る'),
