@@ -39,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool obscurePassword = true;
 
   String? errorMessage;
-  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder:
-                                    (context) =>
-                                        const screen003.PasswordReset(),
+                                builder: (context) => const screen003.PasswordReset(),
                               ),
                             );
                           },
@@ -135,18 +132,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: ElevatedButton.styleFrom(
                           fixedSize: const Size(200, 48),
                         ),
-                        onPressed: isLoading ? null : _handleLogin,
-                        child:
-                            isLoading
-                                ? const SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                                : const Text('ログイン'),
+                        onPressed: _handleLogin,
+                        child: const Text('ログイン'),
                       ),
                       const SizedBox(height: 20),
                       if (errorMessage != null)
@@ -162,8 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder:
-                                  (context) => const screen004.RegisterScreen(),
+                              builder: (context) => const screen004.RegisterScreen(),
                             ),
                           );
                         },
@@ -183,73 +169,72 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _handleLogin() async {
     setState(() {
       errorMessage = null;
-      isLoading = true;
     });
 
-    if (_formKey.currentState!.validate()) {
-      final email = emailController.text.trim();
-      final password = passwordController.text;
+    if (!_formKey.currentState!.validate()) {
+      setState(() {
+        errorMessage = AppMessages.errorEmpty;
+      });
+      return;
+    }
 
-      final url = Uri.parse(ApiEndpoints.login);
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+    final url = Uri.parse(ApiEndpoints.login);
 
-      try {
-        final response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'emailAddress': email, 'password': password}),
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'emailAddress': email, 'password': password}),
+      );
+
+      if (response.statusCode != 200) {
+        setState(() {
+          errorMessage = AppMessages.errorSystemException;
+        });
+        return;
+      }
+
+      final jsonResponse = jsonDecode(response.body);
+      final resultCode = jsonResponse['result'];
+
+      if (resultCode == 1) {
+        final token = jsonResponse['token'];
+        if (token == null || token.isEmpty) {
+          throw Exception(AppMessages.errorSystemException);
+        }
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('jwt_token', token);
+
+        setState(() {
+          errorMessage = null;
+        });
+
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const screen005.TopScreen(),
+          ),
         );
-
-        if (response.statusCode != 200) {
-          setState(() {
-            errorMessage = AppMessages.errorSystemException;
-          });
-          return;
-        }
-
-        final jsonResponse = jsonDecode(response.body);
-        final resultCode = jsonResponse['result'];
-
-        if (resultCode == 1) {
-          final token = jsonResponse['token'];
-          if (token == null || token.isEmpty) {
-            throw Exception(AppMessages.errorSystemException);
-          }
-
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('jwt_token', token);
-
-          setState(() {
-            errorMessage = null;
-          });
-
-          if (!mounted) return;
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const screen005.TopScreen(),
-            ),
-          );
-        } else if (resultCode == 50) {
-          setState(() {
-            errorMessage = AppMessages.errorEmpty;
-          });
-        } else if (resultCode == 51 || resultCode == 52) {
-          setState(() {
-            errorMessage = AppMessages.errorInvalid;
-          });
-        } else {
-          setState(() {
-            errorMessage = AppMessages.errorSystemException;
-          });
-        }
-      } catch (_) {
+      } else if (resultCode == 50) {
+        setState(() {
+          errorMessage = AppMessages.errorEmpty;
+        });
+      } else if (resultCode == 51 || resultCode == 52) {
+        setState(() {
+          errorMessage = AppMessages.errorInvalid;
+        });
+      } else {
         setState(() {
           errorMessage = AppMessages.errorSystemException;
         });
       }
-    } else {
+    } catch (_) {
       setState(() {
-        errorMessage = AppMessages.errorEmpty;
+        errorMessage = AppMessages.errorSystemException;
       });
     }
   }
