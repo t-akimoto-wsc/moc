@@ -8,6 +8,7 @@ class TopScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           const logo_positioned.CommonLogoPositioned(),
