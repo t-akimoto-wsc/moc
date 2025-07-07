@@ -16,8 +16,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
@@ -46,10 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         autocorrect: false,
                         autofillHints: const [AutofillHints.email],
                         maxLength: 256,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14.0,
-                        ),
+                        style: const TextStyle(color: Colors.black, fontSize: 14.0),
                         decoration: const InputDecoration(
                           hintText: 'メールアドレス',
                           border: UnderlineInputBorder(),
@@ -59,9 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (value == null || value.trim().isEmpty) {
                             return 'メールアドレスが未入力です。';
                           }
-                          final emailRegex = RegExp(
-                            r'^[\w\.-]+@[\w\.-]+\.\w+$',
-                          );
+                          final emailRegex = RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$');
                           if (!emailRegex.hasMatch(value.trim())) {
                             return '正しいメールアドレスの形式で入力してください。';
                           }
@@ -74,20 +68,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         obscureText: obscurePassword,
                         autocorrect: false,
                         maxLength: 32,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14.0,
-                        ),
+                        style: const TextStyle(color: Colors.black, fontSize: 14.0),
                         decoration: InputDecoration(
                           hintText: 'パスワード',
                           border: const UnderlineInputBorder(),
                           counterText: '',
                           suffixIcon: IconButton(
-                            icon: Icon(
-                              obscurePassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
+                            icon: Icon(obscurePassword ? Icons.visibility : Icons.visibility_off),
                             onPressed: () {
                               setState(() {
                                 obscurePassword = !obscurePassword;
@@ -100,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             return 'パスワードが未入力です。';
                           }
                           final password = value.trim();
-                          if (password.length <= 8) {
+                          if (password.length < 8) {
                             return 'パスワードは8文字以上で入力してください。';
                           }
                           if (password.length > 32) {
@@ -115,10 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (!RegExp(r'[0-9]').hasMatch(password)) {
                             return 'パスワードには数字を1文字以上含めてください。';
                           }
-                          final allowedPattern = RegExp(
-                            r'^[a-zA-Z0-9`~!@#\$%\^&\*\(\)_\+\-=\{\}\[\]\\|:;\"<>,\.\?\/]+$',
-                          );
-                          if (!allowedPattern.hasMatch(password)) {
+                          if (!RegExp(r'^[a-zA-Z0-9`~!@#\$%\^&\*\(\)_\+\-=\{\}\[\]\\|:;\"<>,\.\?\/]+$').hasMatch(password)) {
                             return '使用できない文字が含まれています';
                           }
                           return null;
@@ -129,24 +113,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         obscureText: obscureConfirmPassword,
                         autocorrect: false,
                         maxLength: 32,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14.0,
-                        ),
+                        style: const TextStyle(color: Colors.black, fontSize: 14.0),
                         decoration: InputDecoration(
                           hintText: 'パスワード（確認）',
                           border: const UnderlineInputBorder(),
                           counterText: '',
                           suffixIcon: IconButton(
-                            icon: Icon(
-                              obscureConfirmPassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
+                            icon: Icon(obscureConfirmPassword ? Icons.visibility : Icons.visibility_off),
                             onPressed: () {
                               setState(() {
-                                obscureConfirmPassword =
-                                    !obscureConfirmPassword;
+                                obscureConfirmPassword = !obscureConfirmPassword;
                               });
                             },
                           ),
@@ -172,20 +148,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 content: const SingleChildScrollView(
                                   child: Text(
                                     '■ 文字数：8文字以上～32文字以下\n'
-                                    '■ 条件：英小文字、英大文字、数字を最低1文字ずつ使用\n'
-                                    '■ 使用可能な文字：\n'
-                                    '・半角英数字（a〜z, A〜Z, 0〜9）\n'
-                                    '\n'
-                                    '・使用可能な記号：\n'
-                                    '` ˜ ! @ # \$ % ^ & * ( ) _ + - = { } [ ]\n'
-                                    '| : ; " < > , . ? /\n',
+                                        '■ 条件：英小文字、英大文字、数字を最低1文字ずつ使用\n'
+                                        '■ 使用可能な文字：\n'
+                                        '・半角英数字（a〜z, A〜Z, 0〜9）\n'
+                                        '\n'
+                                        '・使用可能な記号：\n'
+                                        '` ˜ ! @ # \$ % ^ & * ( ) _ + - = { } [ ]\n'
+                                        '| : ; " < > , . ? /\n',
                                     style: TextStyle(fontSize: 14),
                                   ),
                                 ),
                                 actions: [
                                   TextButton(
-                                    onPressed:
-                                        () => Navigator.of(context).pop(),
+                                    onPressed: () => Navigator.of(context).pop(),
                                     child: const Text('閉じる'),
                                   ),
                                 ],
@@ -197,79 +172,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: 30),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          fixedSize: const Size(200, 48),
-                        ),
+                        style: ElevatedButton.styleFrom(fixedSize: const Size(200, 48)),
                         onPressed: () async {
-                          final isValid =
-                              _formKey.currentState?.validate() ?? false;
-                          if (isValid) {
-                            final resultCode = await _handleRegister();
-                            if (!context.mounted || resultCode == null) return;
-
-                            String message;
-                            String title = 'アカウント作成';
-                            List<Widget> actions = [];
-
-                            switch (resultCode) {
-                              case 1:
-                                message = AppMessages.success;
-                                actions = [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) =>
-                                                  const screen002.LoginScreen(),
-                                        ),
-                                      );
-                                    },
-                                    child: const Text('ログイン画面へ戻る'),
-                                  ),
-                                ];
-                                break;
-                              case 50:
-                                message = AppMessages.errorEmpty;
-                                break;
-                              case 51:
-                              case 52:
-                                message = AppMessages.errorInvalid;
-                                break;
-                              case 53:
-                                message = AppMessages.errorRegistered;
-                                break;
-                              default:
-                                message = AppMessages.errorSystemException;
-                                break;
-                            }
-
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text(title),
-                                  content: Text(message),
-                                  actions:
-                                      actions.isNotEmpty
-                                          ? actions
-                                          : [
-                                            TextButton(
-                                              onPressed:
-                                                  () =>
-                                                      Navigator.of(
-                                                        context,
-                                                      ).pop(),
-                                              child: const Text('OK'),
-                                            ),
-                                          ],
-                                );
-                              },
-                            );
-                          } else {
+                          final isValid = _formKey.currentState?.validate() ?? false;
+                          if (!isValid) {
                             setState(() {
                               errorMessage = '入力項目の内容に問題があります';
                             });
+                            return;
+                          }
+
+                          final resultCode = await _handleRegister();
+
+                          if (!context.mounted || resultCode == null) return;
+
+                          if (resultCode == 1) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const screen002.LoginScreen(),
+                              ),
+                            );
                           }
                         },
                         child: const Text('作成'),
@@ -278,10 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (errorMessage != null)
                         Text(
                           errorMessage!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 14.0,
-                          ),
+                          style: const TextStyle(color: Colors.red, fontSize: 14.0),
                         ),
                       const SizedBox(height: 30),
                       Center(
@@ -289,8 +208,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder:
-                                    (context) => const screen002.LoginScreen(),
+                                builder: (context) => const screen002.LoginScreen(),
                               ),
                             );
                           },
@@ -309,59 +227,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<int?> _handleRegister() async {
-    setState(() {
-      errorMessage = null;
-    });
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+    final url = Uri.parse(ApiEndpoints.register);
 
-    if (_formKey.currentState!.validate()) {
-      final email = emailController.text.trim();
-      final password = passwordController.text;
-      final url = Uri.parse(ApiEndpoints.register);
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'EmailAddress': email, 'Password': password}),
+      );
 
-      try {
-        final response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'emailAddress': email, 'password': password}),
-        );
+      final jsonResponse = jsonDecode(response.body);
+      final resultCode = jsonResponse['result'];
 
-        final jsonResponse = jsonDecode(response.body);
-        final resultCode = jsonResponse['result'];
-
-        if (resultCode == 1) {
-          setState(() {
-            errorMessage = null;
-          });
-
-          return resultCode;
-        } else if (resultCode == 50) {
-          setState(() {
-            errorMessage = AppMessages.errorEmpty;
-          });
-        } else if (resultCode == 51 || resultCode == 52) {
-          setState(() {
-            errorMessage = AppMessages.errorInvalid;
-          });
-        } else if (resultCode == 53) {
-          setState(() {
-            errorMessage = AppMessages.errorRegistered;
-          });
-        } else {
-          setState(() {
-            errorMessage = AppMessages.errorSystemException;
-          });
-        }
-
-        return resultCode;
-      } catch (_) {
+      if (resultCode == 1) {
         setState(() {
-          errorMessage = AppMessages.errorSystemException;
+          errorMessage = null;
         });
-        return null;
+      } else if (resultCode == 50) {
+        setState(() {
+          errorMessage = 'メールアドレスまたはパスワードが未入力です。';
+        });
+      } else if (resultCode == 51 || resultCode == 52) {
+        setState(() {
+          errorMessage = 'メールアドレスまたはパスワードが不正です。';
+        });
+      } else if (resultCode == 53) {
+        setState(() {
+          errorMessage = 'このメールアドレスは既に登録されています。';
+        });
+      } else {
+        setState(() {
+          errorMessage = 'システムエラーが発生しました。';
+        });
       }
-    } else {
+
+      return resultCode;
+    } catch (_) {
       setState(() {
-        errorMessage = AppMessages.errorEmpty;
+        errorMessage = 'システムエラーが発生しました。';
       });
       return null;
     }
