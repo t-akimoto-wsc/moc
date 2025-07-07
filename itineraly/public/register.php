@@ -1,54 +1,62 @@
 <?php
-require_once '../private/db_config.php'; // DBクラスが含まれているファイル
 
-$errorCode = 1; // 初期値
+$errorCode = 1; 
 
+require_once '../private/db_config.php'; 
 try {
-    // リクエストのJSONデータを取得
+    // JSONのPOSTデータ取得
     $input = json_decode(file_get_contents('php://input'), true);
     $email = trim($input['EmailAddress'] ?? '');
-    $Password = trim($input['Password'] ?? '');
+    $password = trim($input['Password'] ?? '');
 
-    // バリデーション：空チェック
-    if (empty($email) || empty($Password)) {
+    // 空チェック
+    if (empty($email) || empty($password)) {
         $errorCode = 50;
+        throw new Exception("空チェックエラー");
     }
 
-    // メールアドレス形式チェック
+    // メール形式チェック
     if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $email)) {
         $errorCode = 51;
+        throw new Exception("メール形式エラー");
     }
 
     // パスワード形式チェック
     if (
-        strlen($Password) < 8 || strlen($Password) > 32 ||
-        !preg_match('/[a-z]/', $Password) ||
-        !preg_match('/[A-Z]/', $Password) ||
-        !preg_match('/[0-9]/', $Password)
+        strlen($password) < 8 || strlen($password) > 32 ||
+        !preg_match('/[a-z]/', $password) ||
+        !preg_match('/[A-Z]/', $password) ||
+        !preg_match('/[0-9]/', $password)
     ) {
         $errorCode = 52;
+        throw new Exception("パスワード形式エラー");
     }
 
     // DB接続
     $db = new DB();
     if (!$db->isConnected_db()) {
         $errorCode = 90;
+        throw new Exception("DB接続失敗");
     }
 
-    // メールアドレス重複チェック
-    $safeEmail = mysqli_real_escape_string($db->conn, $email);
+    $conn = $db->getConnection(); 
+    $safeEmail = mysqli_real_escape_string($conn, $email);
+
+    // 重複チェック
     $selectSql = "SELECT EmailAddress FROM Mst_User WHERE EmailAddress = '$safeEmail' AND DeleteFg = 0";
     $result = $db->execute_select($selectSql);
 
     if ($result === false) {
         $errorCode = 99;
+        throw new Exception("SELECT失敗");
     }
     if (count($result) > 0) {
         $errorCode = 53;
+        throw new Exception("既に登録済み");
     }
 
-    // パスワードハッシュ化してINSERT
-	$hashedPw = password_hash($Password, PASSWORD_DEFAULT);
+    // パスワードハッシュしてINSERT
+    $hashedPw = password_hash($password, PASSWORD_DEFAULT);
     $insertSql = "
         INSERT INTO Mst_User (EmailAddress, Password, CreateDate, UpdateDate, DeleteFg)
         VALUES ('$safeEmail', '$hashedPw', NOW(), NOW(), 0)
@@ -56,10 +64,10 @@ try {
 
     if (!$db->execute_query($insertSql)) {
         $errorCode = 99;
+        throw new Exception("INSERT失敗");
     }
 
-    $errorCode = 1; // 成功
-
+    // 成功のまま終了
 } catch (Exception $e) {
     error_log('処理エラー: ' . $e->getMessage());
 } finally {

@@ -1,65 +1,105 @@
-<?php
-
+ <?php
 class DB {
-    private $host = 'www1532.sakura.ne.jp';
+    private $host = 'localhost';
     private $dbname = 'worth-sc_Itinerary';
-    private $username = 'worth-sc_itinerary';
-    private $password = 'itinerary0214';
+    private $username = 'mysql_user';
+    private $password = 'Passw0rd!';
     private $conn;
 
-    // コンストラクタ
     public function __construct() {
-        try {
-            $this->conn = new mysqli($this->host, $this->username, $this->password, $this->dbname);
-            if ($this->conn->connect_error) {
-                throw new Exception('DB接続エラー: ' . $this->conn->connect_error);
-            }
-        } catch (Exception $e) {
-            error_log($e->getMessage());
+        $this->conn = new mysqli($this->host, $this->username, $this->password, $this->dbname);
+        if ($this->conn->connect_error) {
+            error_log('DB接続エラー: ' . $this->conn->connect_error);
             $this->conn = null;
+        } else {
+            $this->conn->set_charset('utf8mb4');
         }
     }
 
-    // DB接続判定
     public function isConnected_db(): bool {
         return $this->conn !== null;
     }
 
-    // DB切断
+    // ★ 追加メソッド：コネクションを外部へ渡す
+    public function getConnection() {
+        return $this->conn;
+    }
+
     public function disconnect_db(): bool {
-        try {
-            if ($this->conn !== null) {
-                $result = $this->conn->close();
-                return $result;
-            }
-        } catch (Exception $e) {
-            error_log('DB切断エラー: ' . $e->getMessage());
+        if ($this->conn !== null) {
+            return $this->conn->close();
         }
         return false;
     }
 
-    // SQL実行（INSERT/UPDATE/DELETE等）
-    public function execute_query(string $sql): bool {
-        try {
-            $result = $this->conn->query($sql);
-            return $result === true;
-        } catch (Exception $e) {
-            error_log('SQL実行エラー: ' . $e->getMessage());
+    /**
+     * プレースホルダー対応のSELECTクエリ実行
+     *
+     * @param string $sql SQL文（?プレースホルダー使用）
+     * @param array $params バインドする値の配列
+     * @return array|false 結果の連想配列 or false
+     */
+    public function execute_select(string $sql, array $params = []) {
+        if ($this->conn === null) return false;
+
+        $stmt = $this->conn->prepare($sql);
+        if ($stmt === false) {
+            error_log('ステートメント準備失敗: ' . $this->conn->error);
             return false;
         }
+
+        if (!empty($params)) {
+            $types = str_repeat('s', count($params));
+            $stmt->bind_param($types, ...$params);
+        }
+
+        if (!$stmt->execute()) {
+            error_log('クエリ実行失敗: ' . $stmt->error);
+            $stmt->close();
+            return false;
+        }
+
+        $result = $stmt->get_result();
+        if ($result === false) {
+            error_log('結果取得失敗: ' . $stmt->error);
+            $stmt->close();
+            return false;
+        }
+
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $rows;
     }
 
-    // SQL実行（SELECT用）
-    public function execute_select(string $sql) {
-        try {
-            $result = $this->conn->query($sql);
-            if ($result !== false) {
-                return $result->fetch_all(MYSQLI_ASSOC);
-            }
-        } catch (Exception $e) {
-            error_log('SELECT文エラー: ' . $e->getMessage());
+    /**
+     * プレースホルダー対応のINSERT/UPDATE/DELETEクエリ実行
+     *
+     * @param string $sql SQL文（?プレースホルダー使用）
+     * @param array $params バインドする値の配列
+     * @return bool 成功:true 失敗:false
+     */
+    public function execute_query(string $sql, array $params = []): bool {
+        if ($this->conn === null) return false;
+
+        $stmt = $this->conn->prepare($sql);
+        if ($stmt === false) {
+            error_log('ステートメント準備失敗: ' . $this->conn->error);
+            return false;
         }
-        return false;
+
+        if (!empty($params)) {
+            $types = str_repeat('s', count($params));
+            $stmt->bind_param($types, ...$params);
+        }
+
+        $res = $stmt->execute();
+        if (!$res) {
+            error_log('クエリ実行失敗: ' . $stmt->error);
+        }
+
+        $stmt->close();
+        return $res;
     }
 }
 ?>
