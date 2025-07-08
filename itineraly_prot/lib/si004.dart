@@ -102,7 +102,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (!RegExp(r'[0-9]').hasMatch(password)) {
                             return 'パスワードには数字を1文字以上含めてください。';
                           }
-                          if (!RegExp(r'^[a-zA-Z0-9`~!@#\$%\^&\*\(\)_\+\-=\{\}\[\]\\|:;\"<>,\.\?\/]+$').hasMatch(password)) {
+                          if (!RegExp(r'^[a-zA-Z0-9`~!@#\$%\^&\*\(\)_\+\-=\{\}\[\]\\|:;\"<>,\.\?\/]+$')
+                              .hasMatch(password)) {
                             return '使用できない文字が含まれています';
                           }
                           return null;
@@ -187,6 +188,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (!context.mounted || resultCode == null) return;
 
                           if (resultCode == 1) {
+                            await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('登録完了'),
+                                  content: const Text('ユーザー登録が完了しました。ログイン画面に移動します。'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(),
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (!context.mounted) return;
+
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) => const screen002.LoginScreen(),

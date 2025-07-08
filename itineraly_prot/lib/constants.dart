@@ -5,7 +5,7 @@ const bool isProduction = false;
 const String baseUrl =
     isProduction
         ? 'https://worthapp.worth-sc.jp/Itinerary/public'
-        : 'http://10.0.2.2/myapp';
+        : 'http://10.0.2.2/public';
 
 class ApiEndpoints {
   static const String login = '$baseUrl/login.php';
