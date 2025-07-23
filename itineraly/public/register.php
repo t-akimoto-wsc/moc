@@ -1,22 +1,21 @@
 <?php
 
-$errorCode = 1; 
+require_once '../private/db_config.php';
+require_once '../private/ValidationException.php';
 
-require_once '../private/db_config.php'; 
-try 
-{
+$errorCode = 1;
+
+try {
     $input = json_decode(file_get_contents('php://input'), true);
-    $email = trim($input['EmailAddress'] ?? '');
-    $password = trim($input['Password'] ?? '');
+    $email = trim($input['emailAddress'] ?? '');
+    $password = trim($input['password'] ?? '');
 
     if (empty($email) || empty($password)) {
-        $errorCode = 50;
-        throw new Exception("空チェックエラー");
+        throw new ValidationException("空チェックエラー", 50);
     }
 
     if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $email)) {
-        $errorCode = 51;
-        throw new Exception("メール形式エラー");
+        throw new ValidationException("メール形式エラー", 51);
     }
 
     if (
@@ -25,44 +24,51 @@ try
         !preg_match('/[A-Z]/', $password) ||
         !preg_match('/[0-9]/', $password)
     ) {
-        $errorCode = 52;
-        throw new Exception("パスワード形式エラー");
+        throw new ValidationException("パスワード形式エラー", 52);
     }
 
     $db = new DB();
     if (!$db->isConnected_db()) {
-        $errorCode = 90;
-        throw new Exception("DB接続失敗");
+        throw new ValidationException("DB接続失敗", 90);
     }
 
-    $conn = $db->getConnection(); 
-    $safeEmail = mysqli_real_escape_string($conn, $email);
+    $conn = $db->getConnection();
 
-    $selectSql = "SELECT EmailAddress FROM Mst_User WHERE EmailAddress = '$safeEmail' AND DeleteFg = 0";
-    $result = $db->execute_select($selectSql);
+    $stmt = $conn->prepare("SELECT EmailAddress FROM Mst_User WHERE EmailAddress = ? AND DeleteFg = 0");
+    if (!$stmt) {
+        throw new ValidationException("SELECTプリペア失敗: " . $conn->error, 99);
+    }
 
-    if ($result === false) {
-        $errorCode = 99;
-        throw new Exception("SELECT失敗");
+    $stmt->bind_param("s", $email);
+    if (!$stmt->execute()) {
+        throw new ValidationException("SELECT実行失敗: " . $stmt->error, 99);
     }
-    if (count($result) > 0) {
-        $errorCode = 53;
-        throw new Exception("既に登録済み");
+
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        throw new ValidationException("既に登録済み", 53);
     }
+    $stmt->close();
 
     $hashedPw = password_hash($password, PASSWORD_DEFAULT);
-    $insertSql = "
+    $stmt = $conn->prepare("
         INSERT INTO Mst_User (EmailAddress, Password, CreateDate, UpdateDate, DeleteFg)
-        VALUES ('$safeEmail', '$hashedPw', NOW(), NOW(), 0)
-    ";
-
-    if (!$db->execute_query($insertSql)) {
-        $errorCode = 99;
-        throw new Exception("INSERT失敗");
+        VALUES (?, ?, NOW(), NOW(), 0)
+    ");
+    if (!$stmt) {
+        throw new ValidationException("INSERTプリペア失敗: " . $conn->error, 99);
     }
 
+    $stmt->bind_param("ss", $email, $hashedPw);
+    if (!$stmt->execute()) {
+        throw new ValidationException("INSERT実行失敗: " . $stmt->error, 99);
+    }
+    $stmt->close();
+
+} catch (ValidationException $e) {
+    $errorCode = $e->getErrorCode();
 } catch (Exception $e) {
-    error_log('処理エラー: ' . $e->getMessage());
+    $errorCode = 99;
 } finally {
     if (isset($db)) $db->disconnect_db();
     echo json_encode(['result' => $errorCode]);

@@ -6,3 +6,6 @@ Require all denied
 RewriteEngine On
 RewriteCond %{HTTP:Authorization} ^(.*)
 RewriteRule ^ - [E=HTTP_AUTHORIZATION:%1]
+
+# JWT_SECRET_KEY を環境変数として設定
+SetEnv JWT_SECRET_KEY a-string-secret-at-least-256-bits-long

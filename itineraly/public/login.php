@@ -1,10 +1,22 @@
 <?php
 
 $errorCode = 1;
-
-define('JWT_SECRET_KEY', 'a-string-secret-at-least-256-bits-long');
+$token = null; 
 
 require_once '../private/db_config.php';
+require_once '../private/ValidationException.php';
+
+$jwtSecretKey = getenv('JWT_SECRET_KEY');
+if ($jwtSecretKey === false || strlen($jwtSecretKey) < 32) {
+    http_response_code(500);
+    echo json_encode([
+        'result' => 99,
+        'token' => null,
+        'message' => 'JWT_SECRET_KEYが設定されていません'
+    ]);
+    exit;
+}
+
 try 
 {
     $db = new DB();
@@ -26,7 +38,7 @@ try
     $sql = "SELECT password FROM Mst_User WHERE EmailAddress = ? AND DeleteFg = false";
     $result = $db->execute_select($sql, [$email]);
 
-    if ($result === false) {
+    if ($result === false || count($result) === 0) {
         $errorCode = 51;
         throw new Exception("ユーザー取得失敗");
     }
@@ -38,17 +50,17 @@ try
         throw new Exception("パスワード不一致");
     }
 
-    $token = generate_jwt($email);
+    $token = generate_jwt($email, $jwtSecretKey);
 
 } catch (Exception $e) {
-    error_log('認証処理エラー: ' . $e->getMessage());
+    $errorCode = $e->getErrorCode();
     $token = null;
 } finally {
     if (isset($db)) $db->disconnect_db();
     echo json_encode(['result' => $errorCode, 'token' => $token]);
 }
 
-function generate_jwt(string $email): string
+function generate_jwt(string $email, string $secretKey): string
 {
     $header = json_encode(['alg' => 'HS256', 'typ' => 'JWT']);
     $iat = time();
@@ -61,7 +73,7 @@ function generate_jwt(string $email): string
 
     $base64UrlHeader = base64url_encode($header);
     $base64UrlPayload = base64url_encode($payload);
-    $signature = hash_hmac('sha256', "$base64UrlHeader.$base64UrlPayload", JWT_SECRET_KEY, true);
+    $signature = hash_hmac('sha256', "$base64UrlHeader.$base64UrlPayload", $secretKey, true);
     $base64UrlSignature = base64url_encode($signature);
 
     return "$base64UrlHeader.$base64UrlPayload.$base64UrlSignature";
