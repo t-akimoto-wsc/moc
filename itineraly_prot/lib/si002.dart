@@ -37,7 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool obscurePassword = true;
-
   String? errorMessage;
 
   @override
@@ -74,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'メールアドレスが未入力です';
+                            return AppMessages.errorEmptyEmail;
                           }
                           return null;
                         },
@@ -108,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'パスワードが未入力です';
+                            return AppMessages.errorEmptyPassword;
                           }
                           return null;
                         },
@@ -173,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!_formKey.currentState!.validate()) {
       setState(() {
-        errorMessage = AppMessages.errorEmpty;
+        errorMessage = AppMessages.errorInvalidInput;
       });
       return;
     }
@@ -199,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final jsonResponse = jsonDecode(response.body);
       final resultCode = jsonResponse['result'];
 
-      if (resultCode == 1) {
+      if (resultCode == LoginResultCodes.success) {
         final token = jsonResponse['token'];
         if (token == null || token.isEmpty) {
           throw Exception(AppMessages.errorSystemException);
@@ -208,22 +207,17 @@ class _LoginScreenState extends State<LoginScreen> {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('jwt_token', token);
 
-        setState(() {
-          errorMessage = null;
-        });
-
         if (!mounted) return;
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => const screen005.TopScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => const screen005.TopScreen()),
         );
-      } else if (resultCode == 50) {
+      } else if (resultCode == LoginResultCodes.emptyInput) {
         setState(() {
           errorMessage = AppMessages.errorEmpty;
         });
-      } else if (resultCode == 51 || resultCode == 52) {
+      } else if (resultCode == LoginResultCodes.invalidInput1 ||
+          resultCode == LoginResultCodes.invalidInput2) {
         setState(() {
           errorMessage = AppMessages.errorInvalid;
         });
