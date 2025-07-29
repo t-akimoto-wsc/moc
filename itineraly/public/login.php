@@ -26,34 +26,33 @@ try
     $password = $input['password'] ?? '';
 
     if (empty($email) || empty($password)) {
-        $errorCode = 50;
-        throw new Exception("空チェックエラー");
+        throw new ValidationException("空チェックエラー", 50);
     }
 
     if (!$db->isConnected_db()) {
-        $errorCode = 90;
-        throw new Exception("DB接続失敗");
+        throw new ValidationException("DB接続失敗", 90);
     }
 
-    $sql = "SELECT password FROM Mst_User WHERE EmailAddress = ? AND DeleteFg = false";
+    $sql = "SELECT password FROM Mst_User WHERE EmailAddress = ? AND DeleteFg = 0";
     $result = $db->execute_select($sql, [$email]);
 
     if ($result === false || count($result) === 0) {
-        $errorCode = 51;
-        throw new Exception("ユーザー取得失敗");
+        throw new ValidationException("ユーザー取得失敗", 51);
     }
 
     $dbPasswordHash = $result[0]['password'];
 
     if (!password_verify($password, $dbPasswordHash)) {
-        $errorCode = 52;
-        throw new Exception("パスワード不一致");
+        throw new ValidationException("パスワード不一致", 52);
     }
 
     $token = generate_jwt($email, $jwtSecretKey);
 
-} catch (Exception $e) {
+} catch (ValidationException $e) {
     $errorCode = $e->getErrorCode();
+    $token = null;
+} catch (Exception $e) {
+    $errorCode = 99;
     $token = null;
 } finally {
     if (isset($db)) $db->disconnect_db();
