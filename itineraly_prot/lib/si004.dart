@@ -17,7 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
 
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
@@ -59,7 +59,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (value == null || value.trim().isEmpty) {
                             return AppMessages.errorEmptyEmail;
                           }
-                          if (!RegexPatterns.email.hasMatch(value.trim())) {
+                          final trimmed = value.trim();
+                          if (trimmed.length < 3) {
+                            return 'メールアドレスは3文字以上で入力してください';
+                          }
+                          if (trimmed.length > 256) {
+                            return 'メールアドレスは256文字以内で入力してください';
+                          }
+                          if (!RegexPatterns.email.hasMatch(trimmed)) {
                             return AppMessages.errorInvalidEmailFormat;
                           }
                           return null;
@@ -144,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onPressed: () {
                               setState(() {
                                 obscureConfirmPassword =
-                                    !obscureConfirmPassword;
+                                !obscureConfirmPassword;
                               });
                             },
                           ),
