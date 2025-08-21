@@ -1,13 +1,18 @@
 const bool isProduction = false;
 
-const String baseUrl =
-    isProduction
-        ? 'https://worthapp.worth-sc.jp/Itinerary/public'
-        : 'http://10.0.2.2/public';
+String get baseUrl {
+  if (isProduction) {
+    return 'https://worthapp.worth-sc.jp/Itinerary/public';
+  } else {
+    return Uri.base.host.contains('10.0.2.2')
+        ? 'http://10.0.2.2/public'
+        : 'http://127.0.0.1/public';
+  }
+}
 
 class ApiEndpoints {
-  static const String login = '$baseUrl/login.php';
-  static const String register = '$baseUrl/register.php';
+  static final String login = '$baseUrl/login.php';
+  static final String register = '$baseUrl/register.php';
 }
 
 class AppMessages {
