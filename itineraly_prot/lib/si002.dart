@@ -172,7 +172,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!_formKey.currentState!.validate()) {
       setState(() {
-        errorMessage = AppMessages.errorInvalidInput;
+        if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+          errorMessage = AppMessages.errorEmpty;
+        } else {
+          errorMessage = AppMessages.errorInvalidInput;
+        }
       });
       return;
     }
