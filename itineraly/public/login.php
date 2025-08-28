@@ -1,7 +1,7 @@
 <?php
 
 $errorCode = 1;
-$token = null; 
+$token = null;
 
 require_once '../private/db_config.php';
 require_once '../private/ValidationException.php';
@@ -17,20 +17,21 @@ if ($jwtSecretKey === false || strlen($jwtSecretKey) < 32) {
     exit;
 }
 
-try 
-{
-    $db = new DB();
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+try {
+    try {
+        $db = new DB();
+    } catch (mysqli_sql_exception $e) {
+        throw new ValidationException("DB接続失敗", 90);
+    }
 
     $input = json_decode(file_get_contents('php://input'), true);
-    $email = $input['emailAddress'] ?? '';
-    $password = $input['password'] ?? '';
+    $email = trim($input['emailAddress'] ?? '');
+    $password = trim($input['password'] ?? '');
 
     if (empty($email) || empty($password)) {
         throw new ValidationException("空チェックエラー", 50);
-    }
-
-    if (!$db->isConnected_db()) {
-        throw new ValidationException("DB接続失敗", 90);
     }
 
     $sql = "SELECT password FROM Mst_User WHERE EmailAddress = ? AND DeleteFg = 0";

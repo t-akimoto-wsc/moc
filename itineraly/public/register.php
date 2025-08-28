@@ -14,7 +14,7 @@ try {
         throw new ValidationException("空チェックエラー", 50);
     }
 
-    if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $email)) {
+    if (!preg_match('/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $email)) {
         throw new ValidationException("メール形式エラー", 51);
     }
 
@@ -22,12 +22,19 @@ try {
         strlen($password) < 8 || strlen($password) > 32 ||
         !preg_match('/[a-z]/', $password) ||
         !preg_match('/[A-Z]/', $password) ||
-        !preg_match('/[0-9]/', $password)
+        !preg_match('/[0-9]/', $password) ||
+        !preg_match('/^[a-zA-Z0-9~!@#\$%\^&\*\(\)_\+\-=\{\}\[\]\|:;\"<>,\.\?\/]+$/', $password)
     ) {
         throw new ValidationException("パスワード形式エラー", 52);
     }
 
-    $db = new DB();
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    try {
+        $db = new DB();
+    } catch (mysqli_sql_exception $e) {
+        throw new ValidationException("DB接続失敗", 90);
+    }
+
     if (!$db->isConnected_db()) {
         throw new ValidationException("DB接続失敗", 90);
     }
