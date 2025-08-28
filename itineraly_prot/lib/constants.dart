@@ -6,7 +6,7 @@ String get baseUrl {
   } else {
     return Uri.base.host.contains('10.0.2.2')
         ? 'http://10.0.2.2/public'
-        : 'http://127.0.0.1/public';
+        : 'http://192.168.11.9/public';
   }
 }
 
@@ -38,7 +38,9 @@ class AppMessages {
 }
 
 class RegexPatterns {
-  static final RegExp email = RegExp(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+  static final RegExp email = RegExp(
+    r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+  );
   static final RegExp passwordLower = RegExp(r'[a-z]');
   static final RegExp passwordUpper = RegExp(r'[A-Z]');
   static final RegExp passwordNumber = RegExp(r'[0-9]');
