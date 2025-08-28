@@ -13,10 +13,11 @@ class CommonLogoPositioned extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: 20,
-      left: 30,
-      child: CommonLogo(iconSize: iconSize, fontSize: fontSize),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 30, top: 20),
+        child: CommonLogo(iconSize: iconSize, fontSize: fontSize),
+      ),
     );
   }
 }

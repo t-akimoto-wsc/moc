@@ -6,7 +6,7 @@ String get baseUrl {
   } else {
     return Uri.base.host.contains('10.0.2.2')
         ? 'http://10.0.2.2/public'
-        : 'http://192.168.11.9/public';
+        : 'http://127.0.0.1/public';
   }
 }
 
@@ -16,7 +16,7 @@ class ApiEndpoints {
 }
 
 class AppMessages {
-  static const String successDialog = 'ユーザー登録が完了しました。ログイン画面に移動します。';
+  static const String successDialog = 'ユーザー登録が完了しました。ログイン画面に移動します';
   static const String errorInvalid = 'メールアドレスまたはパスワードが間違っています';
   static const String errorEmpty = 'メールアドレスまたはパスワードが未入力です';
   static const String errorRegistered = '登録済みのメールアドレスです';
@@ -24,14 +24,14 @@ class AppMessages {
   static const String errorEmptyEmail = 'メールアドレスが未入力です';
   static const String errorEmptyPassword = 'パスワードが未入力です';
   static const String errorEmptyConfirmPassword = 'パスワード（確認）が未入力です';
-  static const String errorNotMatch = 'パスワードと一致しません。';
-  static const String errorPasswordLengthShort = 'パスワードは8文字以上で入力してください。';
-  static const String errorPasswordLengthLong = 'パスワードは32文字以内で入力してください。';
-  static const String errorPasswordRequireLower = 'パスワードには英小文字を1文字以上含めてください。';
-  static const String errorPasswordRequireUpper = 'パスワードには英大文字を1文字以上含めてください。';
-  static const String errorPasswordRequireNumber = 'パスワードには数字を1文字以上含めてください。';
+  static const String errorNotMatch = 'パスワードと一致しません';
+  static const String errorPasswordLengthShort = 'パスワードは8文字以上で入力してください';
+  static const String errorPasswordLengthLong = 'パスワードは32文字以内で入力してください';
+  static const String errorPasswordRequireLower = 'パスワードには英小文字を1文字以上含めてください';
+  static const String errorPasswordRequireUpper = 'パスワードには英大文字を1文字以上含めてください';
+  static const String errorPasswordRequireNumber = 'パスワードには数字を1文字以上含めてください';
   static const String errorPasswordInvalidChar = '使用できない文字が含まれています';
-  static const String errorInvalidEmailFormat = '正しいメールアドレスの形式で入力してください。';
+  static const String errorInvalidEmailFormat = '正しいメールアドレスの形式で入力してください';
   static const String errorInvalidInput = '入力項目の内容に問題があります';
   static const String showPolicy = 'パスワードポリシー';
   static const String dialogClose = '閉じる';
