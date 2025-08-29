@@ -26,6 +26,10 @@ try {
         throw new ValidationException("DB接続失敗", 90);
     }
 
+    if (!$db->isConnected_db()) {
+        throw new ValidationException("DB接続失敗", 90);
+    }
+
     $input = json_decode(file_get_contents('php://input'), true);
     $email = trim($input['emailAddress'] ?? '');
     $password = trim($input['password'] ?? '');
