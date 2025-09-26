@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: 127.0.0.1
--- 生成日時: 2025-09-26 13:14:45
+-- 生成日時: 2025-09-26 14:02:45
 -- サーバのバージョン： 10.4.32-MariaDB
 -- PHP のバージョン: 8.2.12
 
@@ -31,6 +31,9 @@ CREATE TABLE `mst_user` (
   `UserId` bigint(20) NOT NULL,
   `EmailAddress` varchar(256) DEFAULT NULL,
   `Password` varchar(256) DEFAULT NULL,
+  `Name` varchar(32) NOT NULL,
+  `PhoneNumber` varchar(16) NOT NULL,
+  `DateOfBirth` date DEFAULT NULL,
   `CreateDate` datetime NOT NULL,
   `UpdateDate` datetime NOT NULL,
   `DeleteFg` tinyint(1) NOT NULL
