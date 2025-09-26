@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: 127.0.0.1
--- 生成日時: 2025-09-26 14:02:45
+-- 生成日時: 2025-09-26 15:47:37
 -- サーバのバージョン： 10.4.32-MariaDB
 -- PHP のバージョン: 8.2.12
 
@@ -29,14 +29,14 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `mst_user` (
   `UserId` bigint(20) NOT NULL,
-  `EmailAddress` varchar(256) DEFAULT NULL,
-  `Password` varchar(256) DEFAULT NULL,
-  `Name` varchar(32) NOT NULL,
-  `PhoneNumber` varchar(16) NOT NULL,
+  `EmailAddress` varchar(256) NOT NULL,
+  `Password` varchar(256) NOT NULL,
+  `Name` varchar(32) DEFAULT NULL,
+  `PhoneNumber` varchar(16) DEFAULT NULL,
   `DateOfBirth` date DEFAULT NULL,
-  `CreateDate` datetime NOT NULL,
-  `UpdateDate` datetime NOT NULL,
-  `DeleteFg` tinyint(1) NOT NULL
+  `CreateDate` datetime DEFAULT NULL,
+  `UpdateDate` datetime DEFAULT NULL,
+  `DeleteFg` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
