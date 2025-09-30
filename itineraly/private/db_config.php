@@ -1,9 +1,9 @@
 <?php
 class DB {
-    private $host = 'localhost';
-    private $dbname = 'worth-sc_Itinerary';
-    private $username = 'mysql_user';
-    private $password = 'Passw0rd!';
+    private $host = 'mysql3103.db.sakura.ne.jp';
+    private $dbname = 'worth-sc_itinerary';
+    private $username = 'worth-sc_itinerary';
+    private $password = 'itinerary0214';
     private $conn;
 
     public function __construct() {
