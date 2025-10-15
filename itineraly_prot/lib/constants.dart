@@ -1,13 +1,7 @@
-const bool isProduction = false;
+const bool isProduction = true;
 
 String get baseUrl {
-  if (isProduction) {
-    return 'https://worthapp.worth-sc.jp/Itinerary/public';
-  } else {
-    return Uri.base.host.contains('10.0.2.2')
-        ? 'http://10.0.2.2/public'
-        : 'http://127.0.0.1/public';
-  }
+  return 'https://worthapp.worth-sc.jp/Itinerary/public';
 }
 
 class ApiEndpoints {
