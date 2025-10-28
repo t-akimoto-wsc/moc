@@ -1,7 +1,7 @@
 <?php
 
 require_once '../private/db_config.php';
-require_once '../private/ValidationException.php';
+require_once '../private/validation_exception.php';
 
 $errorCode = 1;
 

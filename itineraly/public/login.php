@@ -3,11 +3,13 @@
 $errorCode = 1;
 $token = null;
 
+require_once '../private/env.php';
 require_once '../private/db_config.php';
-require_once '../private/ValidationException.php';
+require_once '../private/validation_exception.php';
 
-$jwtSecretKey = getenv('JWT_SECRET_KEY');
-if ($jwtSecretKey === false || strlen($jwtSecretKey) < 32) {
+$jwtSecretKey = JWT_SECRET_KEY;
+
+if (empty($jwtSecretKey) || strlen($jwtSecretKey) < 32) {
     http_response_code(500);
     echo json_encode([
         'result' => 99,

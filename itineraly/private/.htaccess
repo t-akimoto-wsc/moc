@@ -1,11 +1,9 @@
-# .htaccess - privateディレクトリ用（Apache 2.4以降）
-
-Require all denied
+# 直接ブラウザからアクセスされた場合は403
+<FilesMatch "\.php$">
+    Require all denied
+</FilesMatch>
 
 # Authorizationヘッダーを環境変数にコピー（API認証等で必要なら）
 RewriteEngine On
 RewriteCond %{HTTP:Authorization} ^(.*)
 RewriteRule ^ - [E=HTTP_AUTHORIZATION:%1]
-
-# JWT_SECRET_KEY を環境変数として設定
-SetEnv JWT_SECRET_KEY a-string-secret-at-least-256-bits-long
