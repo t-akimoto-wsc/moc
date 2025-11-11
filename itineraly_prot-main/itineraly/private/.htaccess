@@ -1,0 +1,9 @@
+# 直接ブラウザからアクセスされた場合は403
+<FilesMatch "\.php$">
+    Require all denied
+</FilesMatch>
+
+# Authorizationヘッダーを環境変数にコピー（API認証等で必要なら）
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule ^ - [E=HTTP_AUTHORIZATION:%1]
