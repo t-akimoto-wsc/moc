@@ -81,8 +81,7 @@ class _Screen007PageState extends State<Screen007Page> {
         ),
       ),
 
-      // 右側：レスポンシブルに拡張できるメニュー（現時点は2項目のみ）
-      actions: const [_ResponsiveTopMenu(), SizedBox(width: 6)],
+      // ✅ 右側メニューは不要のため削除（…メニュー含めて非表示）
 
       // 画面タイトル：中央上部（SafeArea中央）
       flexibleSpace: const SafeArea(
@@ -307,64 +306,3 @@ class _Screen007PageState extends State<Screen007Page> {
     );
   }
 }
-
-/// レスポンシブルな上部メニュー（現時点は2項目のみ）
-/// - 横幅がある: AppBar右側にテキストボタン
-/// - 狭い: 3点メニューに格納（将来項目追加もここに足すだけ）
-class _ResponsiveTopMenu extends StatelessWidget {
-  const _ResponsiveTopMenu();
-
-  void _goToList(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const screen009.TripPlanListPage()),
-    );
-  }
-
-  void _goToProfile(BuildContext context) {
-    // いま居る画面なので何もしない
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final bool compact = width < 520;
-
-    if (!compact) {
-      return Row(
-        children: [
-          TextButton(
-            onPressed: () => _goToList(context),
-            child: const Text('一覧'),
-          ),
-          TextButton(
-            onPressed: () => _goToProfile(context),
-            child: const Text('プロフィール'),
-          ),
-        ],
-      );
-    }
-
-    return PopupMenuButton<_MenuAction>(
-      tooltip: 'メニュー',
-      itemBuilder:
-          (context) => const [
-            PopupMenuItem(value: _MenuAction.list, child: Text('一覧')),
-            PopupMenuItem(value: _MenuAction.profile, child: Text('プロフィール')),
-          ],
-      onSelected: (action) {
-        switch (action) {
-          case _MenuAction.list:
-            _goToList(context);
-            break;
-          case _MenuAction.profile:
-            _goToProfile(context);
-            break;
-        }
-      },
-      icon: const Icon(Icons.more_vert),
-    );
-  }
-}
-
-enum _MenuAction { list, profile }
