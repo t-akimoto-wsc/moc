@@ -18,7 +18,7 @@ class _Si007RunnerApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'si007',
       theme: ThemeData(useMaterial3: true),
-      home: const Screen007Page(), // ✅ クラス名を明確化
+      home: const Screen007Page(),
     );
   }
 }
@@ -58,6 +58,8 @@ class _Screen007PageState extends State<Screen007Page> {
       elevation: 0,
       automaticallyImplyLeading: false,
       titleSpacing: 0,
+
+      // 左：ロゴ＋旅リアン
       leadingWidth: leftWidth,
       leading: Padding(
         padding: const EdgeInsets.only(left: 12),
@@ -81,16 +83,15 @@ class _Screen007PageState extends State<Screen007Page> {
         ),
       ),
 
-      // ✅ 右側メニューは不要のため削除（…メニュー含めて非表示）
+      // ✅ 右上に出るメニューの温床は actions / flexibleSpace / title内Row右側
+      // ✅ ここでは「actions を空固定」し、右側に何も出ないことを保証する
+      actions: const [],
 
-      // 画面タイトル：中央上部（SafeArea中央）
-      flexibleSpace: const SafeArea(
-        child: Center(
-          child: Text(
-            'プロフィール管理',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
-        ),
+      // ✅ タイトルはAppBarの正規のtitleを使う（flexibleSpaceは使わない）
+      centerTitle: true,
+      title: const Text(
+        'プロフィール管理',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
       ),
     );
   }
@@ -124,26 +125,24 @@ class _Screen007PageState extends State<Screen007Page> {
   }
 
   void _onTapMenu(int index) {
-    if (index == _menuIndex) return; // ✅ 同じタブなら何もしない
+    if (index == _menuIndex) return;
 
     setState(() => _menuIndex = index);
 
     if (index == 0) {
-      // ✅ 一覧へ
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const screen009.TripPlanListPage()),
       );
       return;
     }
-
-    // index==1 はプロフィール（今居る画面）なので通常ここには来ない
+    // index==1 はプロフィール（現在画面）
   }
 
   Future<void> _confirmLogout() async {
     final result = await showDialog<bool>(
       context: context,
-      barrierDismissible: false, // 画面外タップで閉じない（誤タップ防止）
+      barrierDismissible: false, // 画面外タップで閉じない
       builder: (context) {
         return AlertDialog(
           title: const Text('ログアウト'),
@@ -168,7 +167,6 @@ class _Screen007PageState extends State<Screen007Page> {
   }
 
   void _logoutToLogin() {
-    // 戻るボタンで戻れないようにスタックをクリア
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => const screen002.LoginScreen()),
@@ -182,7 +180,6 @@ class _Screen007PageState extends State<Screen007Page> {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 520),
           child: SingleChildScrollView(
-            // ✅ 下部メニュー分 + ログアウトリンク分の余白を確保
             padding: const EdgeInsets.fromLTRB(
               24,
               0,
@@ -194,7 +191,7 @@ class _Screen007PageState extends State<Screen007Page> {
               children: [
                 const SizedBox(height: 24),
 
-                // プロフィール画像（任意）※モック：実装は省略
+                // プロフィール画像（任意）※モック
                 Center(
                   child: Stack(
                     children: [
@@ -226,14 +223,14 @@ class _Screen007PageState extends State<Screen007Page> {
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
-                    hintText: '名前またはニックネーム',
+                    hintText: '表示名',
                     border: UnderlineInputBorder(),
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
-                const Text('メールアドレス（表示のみ）', style: TextStyle(fontSize: 12)),
+                const Text('メールアドレス', style: TextStyle(fontSize: 12)),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -264,7 +261,6 @@ class _Screen007PageState extends State<Screen007Page> {
 
                 const SizedBox(height: 20),
 
-                // ✅ 最下部：小さめログアウトリンク（誤タップ防止）
                 Align(
                   alignment: Alignment.center,
                   child: TextButton(
@@ -302,7 +298,7 @@ class _Screen007PageState extends State<Screen007Page> {
       backgroundColor: _bg,
       appBar: _buildAppBar(context),
       body: _body(context),
-      bottomNavigationBar: _buildBottomNav(), // ✅ 下部メニュー復活
+      bottomNavigationBar: _buildBottomNav(),
     );
   }
 }
