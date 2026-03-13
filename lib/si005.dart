@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'si002.dart' as screen002;
 import 'si006.dart' as screen006;
 
 /// ===============================
@@ -32,6 +33,13 @@ class _OtpScreenState extends State<OtpScreen> {
   void dispose() {
     otpController.dispose();
     super.dispose();
+  }
+
+  void _goToLogin() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const screen002.LoginScreen()),
+    );
   }
 
   // =========================
