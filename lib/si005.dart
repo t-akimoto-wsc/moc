@@ -165,6 +165,13 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                         ),
 
+                        const SizedBox(height: 20),
+
+                        TextButton(
+                        onPressed: _goToLogin,
+                        child: const Text('ログイン画面へ戻る'),
+                      ),
+
                         const SizedBox(height: 40),
                       ],
                     ),
