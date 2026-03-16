@@ -18,10 +18,7 @@ class WorthApp extends StatelessWidget {
     return MaterialApp(
       title: '旅リアン',
       debugShowCheckedModeBanner: false,
-
-      // ★ 日本語ローカライズ設定
       locale: const Locale('ja'),
-
       supportedLocales: const [
         Locale('ja'),
         Locale('en'),
@@ -33,11 +30,8 @@ class WorthApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
 
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
-
-      home: const StartupScreen(),
+      theme: ThemeData(useMaterial3: true),
+      home: const StartupScreen(), // ✅ SI001（起動画面）
     );
   }
 }
