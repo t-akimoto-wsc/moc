@@ -143,7 +143,7 @@ class _TripPlanListPageState extends State<TripPlanListPage> {
 
   late final List<_NavItem> _navItems = [
     _NavItem(
-      label: '旅行情報一覧',
+      label: 'スケジュールリスト',
       icon: Icons.list,
       builder: (_) => const TripPlanListPage(),
     ),
@@ -280,7 +280,7 @@ class _TripPlanListPageState extends State<TripPlanListPage> {
 
   Widget _buildCenterTitle() {
     return const Text(
-      '旅行情報一覧',
+      'スケジュールリスト',
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

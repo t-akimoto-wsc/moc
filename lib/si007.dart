@@ -90,7 +90,7 @@ class _Screen007PageState extends State<Screen007Page> {
       // ✅ タイトルはAppBarの正規のtitleを使う（flexibleSpaceは使わない）
       centerTitle: true,
       title: const Text(
-        'プロフィール管理',
+        'プロフィール',
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
       ),
     );
@@ -111,7 +111,7 @@ class _Screen007PageState extends State<Screen007Page> {
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.list_alt),
-                label: '旅行情報一覧',
+                label: 'スケジュールリスト',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),

@@ -177,7 +177,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
                         TextButton(
                         onPressed: _goToLogin,
-                        child: const Text('ログイン画面へ戻る'),
+                        child: const Text('前の画面へ戻る'),
                       ),
 
                         const SizedBox(height: 40),

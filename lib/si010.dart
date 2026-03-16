@@ -221,7 +221,7 @@ class _Si010PageState extends State<Si010Page> {
       case '船':
         return Icons.directions_boat;
       case 'その他':
-        return Icons.more_horiz;
+        return Icons.route;
       case '未設定':
       default:
         return null;
@@ -269,7 +269,7 @@ class _Si010PageState extends State<Si010Page> {
           children: const [
             Center(
               child: Text(
-                'スケジュール管理',
+                '旅行スケジュール',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -286,6 +286,7 @@ class _Si010PageState extends State<Si010Page> {
     final DateTime now = DateTime.now();
     final DateTime? picked = await showDatePicker(
       context: context,
+      locale: const Locale('ja'),
       initialDate: now,
       firstDate: DateTime(now.year - 1),
       lastDate: DateTime(now.year + 5),
@@ -313,13 +314,17 @@ class _Si010PageState extends State<Si010Page> {
   bool _sameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
-  void _removeDay(int index) {
+  Future<void> _removeDay(int index) async {
+    final ok = await _confirmDelete('この日付と予定をすべて削除しますか？');
+    if (!ok) return;
+
     setState(() {
       _days[index].dispose();
       _days.removeAt(index);
       _isDirty = true;
     });
   }
+
 
   int _entrySort(ScheduleEntryDraft a, ScheduleEntryDraft b) {
     final ta = a.time;
@@ -379,11 +384,14 @@ class _Si010PageState extends State<Si010Page> {
     });
   }
 
-  void _removeScheduleEntry(int dayIndex, int entryIndex) {
-    setState(() {
-      _days[dayIndex].entries[entryIndex].dispose();
-      _days[dayIndex].entries.removeAt(entryIndex);
-      _isDirty = true;
+  Future<void> _removeScheduleEntry(int dayIndex, int entryIndex) async {
+    final ok = await _confirmDelete('この予定を削除しますか？');
+    if (!ok) return;
+
+  setState(() {
+     _days[dayIndex].entries[entryIndex].dispose();
+     _days[dayIndex].entries.removeAt(entryIndex);
+     _isDirty = true;
     });
   }
 
@@ -508,6 +516,30 @@ class _Si010PageState extends State<Si010Page> {
     );
   }
 
+  Future<bool> _confirmDelete(String message) async {
+  final bool? result = await showDialog<bool>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('削除確認'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('キャンセル'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('削除'),
+          ),
+        ],
+      );
+    },
+  );
+
+  return result ?? false;
+}
+
   @override
   Widget build(BuildContext context) {
     final titleStyle =
@@ -548,7 +580,7 @@ class _Si010PageState extends State<Si010Page> {
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.list_alt),
-                label: '旅行情報一覧',
+                label: 'スケジュールリスト',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
@@ -822,7 +854,9 @@ class _TimelineItemWide extends StatelessWidget {
                         Expanded(
                           child: Text(
                             memoText,
+                            maxLines: 1,
                             softWrap: true,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.grey,
@@ -1094,8 +1128,9 @@ class _AddOrEditScheduleEntryDialogState
                 TextField(
                   controller: _desc,
                   maxLines: 4,
+                  maxLength: 256,
                   decoration: const InputDecoration(
-                    labelText: '説明',
+                    labelText: '説明（256文字以内）',
                     border: OutlineInputBorder(),
                   ),
                 ),
