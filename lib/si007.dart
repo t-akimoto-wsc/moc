@@ -142,7 +142,7 @@ class _Screen007PageState extends State<Screen007Page> {
   Future<void> _confirmLogout() async {
     final result = await showDialog<bool>(
       context: context,
-      barrierDismissible: false, // 画面外タップで閉じない
+      barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
           title: const Text('ログアウト'),
