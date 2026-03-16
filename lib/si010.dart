@@ -309,6 +309,7 @@ class _Si010PageState extends State<Si010Page> {
       _days.sort((a, b) => a.date.compareTo(b.date));
       _isDirty = true;
     });
+    await _addScheduleEntry(_days.length - 1);
   }
 
   bool _sameDay(DateTime a, DateTime b) =>
