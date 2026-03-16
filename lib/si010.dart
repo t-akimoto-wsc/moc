@@ -286,6 +286,7 @@ class _Si010PageState extends State<Si010Page> {
     final DateTime now = DateTime.now();
     final DateTime? picked = await showDatePicker(
       context: context,
+      locale: const Locale('ja'),
       initialDate: now,
       firstDate: DateTime(now.year - 1),
       lastDate: DateTime(now.year + 5),
@@ -308,7 +309,9 @@ class _Si010PageState extends State<Si010Page> {
       _days.sort((a, b) => a.date.compareTo(b.date));
       _isDirty = true;
     });
+    await _addScheduleEntry(_days.length - 1);
   }
+  
 
   bool _sameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
