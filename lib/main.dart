@@ -17,6 +17,16 @@ class WorthApp extends StatelessWidget {
     return MaterialApp(
       title: '旅リアン',
       debugShowCheckedModeBanner: false,
+      locale: const Locale('ja'),
+      supportedLocales: const [
+        Locale('ja'),
+        Locale('en'),
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: ThemeData(useMaterial3: true),
       home: const StartupScreen(), // ✅ SI001（起動画面）
     );
