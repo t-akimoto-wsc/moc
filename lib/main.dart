@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'si002.dart' as screen002;
 
 /// ===============================
@@ -17,8 +18,26 @@ class WorthApp extends StatelessWidget {
     return MaterialApp(
       title: '旅リアン',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true),
-      home: const StartupScreen(), // ✅ SI001（起動画面）
+
+      // ★ 日本語ローカライズ設定
+      locale: const Locale('ja'),
+
+      supportedLocales: const [
+        Locale('ja'),
+        Locale('en'),
+      ],
+
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
+
+      home: const StartupScreen(),
     );
   }
 }
@@ -57,7 +76,10 @@ class _StartupScreenState extends State<StartupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ “表示ほぼ無し” 要件：真っ白（統一色）のみ
-    return const Scaffold(backgroundColor: _bg, body: SizedBox.expand());
+    // “表示ほぼ無し” 要件：真っ白（統一色）のみ
+    return const Scaffold(
+      backgroundColor: _bg,
+      body: SizedBox.expand(),
+    );
   }
 }
