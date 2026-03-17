@@ -84,7 +84,7 @@ class _PasswordResetState extends State<PasswordReset> {
     setState(() => message = null);
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const screen005.OtpScreen(from: OtpFrom.signup)),
+      MaterialPageRoute(builder: (_) => const screen005.OtpScreen(from: OtpFrom.resetPassword)),
     );
   }
 
