@@ -92,12 +92,11 @@ class _StartupScreenState extends State<StartupScreen> {
             Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
 
-                  Icon(
-                    Icons.flight_outlined,
-                    color: Colors.white,
-                    size: 100,
+                  Image.asset(
+                    'assets/images/logo.png',
+                    width: 140,
                   ),
 
                   SizedBox(height: 30),

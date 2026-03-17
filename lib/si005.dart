@@ -1,23 +1,34 @@
 import 'package:flutter/material.dart';
 import 'si002.dart' as screen002;
+import 'si003.dart' as screen003;
+import 'si004.dart' as screen004;
 import 'si006.dart' as screen006;
+
+/// ===============================
+/// 遷移元種別
+/// ===============================
+enum OtpFrom {
+  PasswordReset,
+  RegisterScreen,
+}
 
 /// ===============================
 /// 単体起動用 main()
 /// ===============================
 void main() {
   runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: OtpScreen()),
+    const MaterialApp(debugShowCheckedModeBanner: false, home: OtpScreen(from: OtpFrom.RegisterScreen)),
   );
 }
 
 /// =======================================
 /// SI005 ワンタイムパス入力（モック）
 /// - 送信ボタン押下で SI006（パスワード設定）へ遷移
-/// - ※ TopScreen は SI009 予定のため、ここでは定義しない
 /// =======================================
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  final OtpFrom from;
+
+  const OtpScreen({super.key, required this.from});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -35,11 +46,25 @@ class _OtpScreenState extends State<OtpScreen> {
     super.dispose();
   }
 
-  void _goToLogin() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const screen002.LoginScreen()),
-    );
+  /// =========================
+  /// 前画面へ戻る
+  /// =========================
+  void _goBack() {
+    if (widget.from == OtpFrom.RegisterScreen) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const screen004.RegisterScreen(),
+        ),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const screen003.PasswordReset(),
+        ),
+      );
+    }
   }
 
   // =========================
@@ -55,7 +80,7 @@ class _OtpScreenState extends State<OtpScreen> {
       titleSpacing: 0,
       leadingWidth: leftWidth,
 
-      // 左上：ロゴ + アプリ名（ここだけ表示）
+      // 左上：ロゴ + アプリ名
       leading: Padding(
         padding: const EdgeInsets.only(left: 12),
         child: Row(
@@ -78,7 +103,7 @@ class _OtpScreenState extends State<OtpScreen> {
         ),
       ),
 
-      // 中央タイトル（完全中央）
+      // 中央タイトル
       title: const SizedBox.shrink(),
       flexibleSpace: const SafeArea(
         child: Center(
@@ -92,8 +117,7 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   // =========================
-  // バリデーション（残しておく：見た目の即時エラー表示用）
-  // ※ ただしモック遷移では使わない
+  // バリデーション
   // =========================
   String? _validateOtp(String? v) {
     final t = (v ?? '').trim();
@@ -102,15 +126,16 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   // =========================
-  // 送信（モック）：入力の正誤に関わらず SI006 へ
+  // 送信（モック）
   // =========================
   void _onSendMock() {
     FocusScope.of(context).unfocus();
     setState(() => message = null);
 
-    // ✅ モック方針：バリデーション無視で次へ
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const screen006.PasswordSetScreen()),
+      MaterialPageRoute(
+        builder: (_) => const screen006.PasswordSetScreen(),
+      ),
     );
   }
 
@@ -147,9 +172,11 @@ class _OtpScreenState extends State<OtpScreen> {
                             border: UnderlineInputBorder(),
                             counterText: '',
                           ),
-                          validator: _validateOtp, // 表示用に残す
+                          validator: _validateOtp,
                           onChanged: (_) {
-                            if (message != null) setState(() => message = null);
+                            if (message != null) {
+                              setState(() => message = null);
+                            }
                           },
                         ),
 
@@ -176,9 +203,9 @@ class _OtpScreenState extends State<OtpScreen> {
                         const SizedBox(height: 20),
 
                         TextButton(
-                        onPressed: _goToLogin,
-                        child: const Text('前の画面へ戻る'),
-                      ),
+                          onPressed: _goBack,
+                          child: const Text('前の画面へ戻る'),
+                        ),
 
                         const SizedBox(height: 40),
                       ],
