@@ -92,7 +92,7 @@ class _StartupScreenState extends State<StartupScreen> {
             Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
 
                   Image.asset(
                     'assets/images/logo.png',
