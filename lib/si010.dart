@@ -1189,15 +1189,38 @@ class _MemoDialog extends StatelessWidget {
         ),
       ),
       actions: [
-        if (hasMemo)
-          TextButton(
-            onPressed:
-                () => Navigator.pop(
-                  context,
-                  const _MemoResult(_MemoAction.delete),
-                ),
-            child: const Text('削除'),
-          ),
+if (hasMemo)
+  TextButton(
+    onPressed: () async {
+      final result = await showDialog<bool>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('確認'),
+            content: const Text('メモを削除しますか？'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('キャンセル'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('削除'),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (result == true) {
+        Navigator.pop(
+          context,
+          const _MemoResult(_MemoAction.delete),
+        );
+      }
+    },
+    child: const Text('削除'),
+  ),
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: const Text('キャンセル'),
