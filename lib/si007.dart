@@ -139,33 +139,6 @@ class _Screen007PageState extends State<Screen007Page> {
     // index==1 はプロフィール（現在画面）
   }
 
-  Future<void> _confirmLogout() async {
-    final result = await showDialog<bool>(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('ログアウト'),
-          content: const Text('ログアウトしますか？'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('キャンセル'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('ログアウト'),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (result == true) {
-      _logoutToLogin();
-    }
-  }
-
   void _logoutToLogin() {
     Navigator.pushAndRemoveUntil(
       context,
@@ -264,24 +237,23 @@ class _Screen007PageState extends State<Screen007Page> {
                 Align(
                   alignment: Alignment.center,
                   child: TextButton(
-                    onPressed: _confirmLogout,
+                    onPressed: _logoutToLogin,
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      minimumSize: const Size(0, 0),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
                     ),
-                    child: const Text(
-                      'ログアウト',
-                      style: TextStyle(
-                        fontSize: 12,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
+                    minimumSize: const Size(0, 0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: const Text(
+                    'ログアウト',
+                    style: TextStyle(
+                    fontSize: 12,
+                    decoration: TextDecoration.underline,
                   ),
                 ),
+              ),
 
                 const SizedBox(height: 8),
               ],
