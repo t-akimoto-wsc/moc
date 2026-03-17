@@ -8,8 +8,8 @@ import 'si006.dart' as screen006;
 /// 遷移元種別
 /// ===============================
 enum OtpFrom {
-  signup,
-  resetPassword,
+  PasswordReset,
+  RegisterScreen,
 }
 
 /// ===============================
@@ -50,7 +50,7 @@ class _OtpScreenState extends State<OtpScreen> {
   /// 前画面へ戻る
   /// =========================
   void _goBack() {
-    if (widget.from == OtpFrom.signup) {
+    if (widget.from == OtpFrom.RegisterScreen) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
