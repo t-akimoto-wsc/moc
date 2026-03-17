@@ -76,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     // ✅ 設計の流れに合わせて SI005（OTP入力）へ
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const screen005.OtpScreen()),
+      MaterialPageRoute(builder: (_) => const screen005.OtpScreen(from: OtpFrom.signup)),
     );
   }
 
