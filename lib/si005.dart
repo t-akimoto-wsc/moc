@@ -17,7 +17,7 @@ enum OtpFrom {
 /// ===============================
 void main() {
   runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: OtpScreen(from: OtpFrom.signup)),
+    const MaterialApp(debugShowCheckedModeBanner: false, home: OtpScreen(from: OtpFrom.RegisterScreen)),
   );
 }
 
