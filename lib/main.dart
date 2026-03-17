@@ -77,7 +77,7 @@ class _StartupScreenState extends State<StartupScreen> {
               height: double.infinity,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/travel_bg.jpg'),
+                  image: AssetImage('assets/images/Topimage.png'),
                   fit: BoxFit.cover,
                 ),
               ),
