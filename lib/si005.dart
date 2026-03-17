@@ -54,14 +54,14 @@ class _OtpScreenState extends State<OtpScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const screen004.AccountCreateScreen(),
+          builder: (_) => const screen004.RegisterScreen(),
         ),
       );
     } else {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const screen003.PasswordResetScreen(),
+          builder: (_) => const screen003.PasswordReset(),
         ),
       );
     }
