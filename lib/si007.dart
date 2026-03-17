@@ -254,7 +254,7 @@ class _Screen007PageState extends State<Screen007Page> {
                   ),
                 ),
               ),
-            ),
+                ),
                 const SizedBox(height: 8),
               ],
             ),
