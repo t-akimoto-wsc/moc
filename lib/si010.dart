@@ -699,6 +699,9 @@ class _Si010PageState extends State<Si010Page> {
                                                     dayIndex: di,
                                                     entryIndex: i,
                                                   ),
+                                              onTapMemo: () {
+                                                _openMemoEditor(entry: e);
+                                              },
                                             );
                                           },
                                         ),
@@ -873,6 +876,7 @@ if (memoText.isNotEmpty) ...[
     ),
   ),
 ],
+    ],
               ),
             ),
           ),
