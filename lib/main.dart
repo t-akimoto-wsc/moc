@@ -3,8 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'si002.dart' as screen002;
 
 /// ===============================
-/// SI001：トップ画面（モック）
-/// 起動したら自動で SI002（ログイン）へ遷移
+/// SI001：トップ画面
+/// 背景画像 + タップでログイン画面へ遷移
 /// ===============================
 void main() {
   runApp(const WorthApp());
@@ -19,9 +19,8 @@ class WorthApp extends StatelessWidget {
       title: '旅リアン',
       debugShowCheckedModeBanner: false,
 
-      // ★ 日本語ローカライズ設定
+      // 日本語ロケール設定
       locale: const Locale('ja'),
-
       supportedLocales: const [
         Locale('ja'),
         Locale('en'),
@@ -50,19 +49,7 @@ class StartupScreen extends StatefulWidget {
 }
 
 class _StartupScreenState extends State<StartupScreen> {
-  // 他画面と同トーンに合わせる（今の統一色）
-  static const Color _bg = Color(0xFFFFFBFE);
-
   bool _moved = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // 1フレーム後に遷移（context安全）
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _goLogin();
-    });
-  }
 
   void _goLogin() {
     if (_moved) return;
@@ -70,16 +57,75 @@ class _StartupScreenState extends State<StartupScreen> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const screen002.LoginScreen()),
+      MaterialPageRoute(
+        builder: (_) => const screen002.LoginScreen(),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // “表示ほぼ無し” 要件：真っ白（統一色）のみ
-    return const Scaffold(
-      backgroundColor: _bg,
-      body: SizedBox.expand(),
+    return GestureDetector(
+      onTap: _goLogin,
+      child: Scaffold(
+        body: Stack(
+          children: [
+
+            /// 背景画像
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/travel_bg.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+
+            /// 文字を見やすくする半透明レイヤー
+            Container(
+              color: Colors.black.withOpacity(0.35),
+            ),
+
+            /// 中央テキスト
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+
+                  Icon(
+                    Icons.flight_outlined,
+                    color: Colors.white,
+                    size: 100,
+                  ),
+
+                  SizedBox(height: 30),
+
+                  Text(
+                    '旅リアン',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+
+                  SizedBox(height: 20),
+
+                  Text(
+                    '画面をタップしてください',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
