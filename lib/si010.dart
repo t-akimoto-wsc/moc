@@ -765,6 +765,7 @@ class _TimelineItemWide extends StatelessWidget {
   final String? transportLabel;
 
   final VoidCallback onOpenMenu;
+  final VoidCallback onTapMemo;
 
   const _TimelineItemWide({
     required this.isFirst,
@@ -777,6 +778,7 @@ class _TimelineItemWide extends StatelessWidget {
     required this.transportIcon,
     required this.transportLabel,
     required this.onOpenMenu,
+    required this.onTapMemo,
   });
 
   @override
@@ -844,31 +846,33 @@ class _TimelineItemWide extends StatelessWidget {
                       style: const TextStyle(fontSize: 13),
                     ),
                   ],
-                  if (memoText.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'メモ: ',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                        Expanded(
-                          child: Text(
-                            memoText,
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ],
+if (memoText.isNotEmpty) ...[
+  const SizedBox(height: 10),
+  InkWell(
+    onTap: onTapMemo,
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'メモ: ',
+          style: TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+        Expanded(
+          child: Text(
+            memoText,
+            maxLines: 1,
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+],
               ),
             ),
           ),
