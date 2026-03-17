@@ -699,6 +699,9 @@ class _Si010PageState extends State<Si010Page> {
                                                     dayIndex: di,
                                                     entryIndex: i,
                                                   ),
+                                              onTapMemo: () {
+                                                _openMemoEditor(entry: e);
+                                              },
                                             );
                                           },
                                         ),
@@ -765,6 +768,7 @@ class _TimelineItemWide extends StatelessWidget {
   final String? transportLabel;
 
   final VoidCallback onOpenMenu;
+  final VoidCallback onTapMemo;
 
   const _TimelineItemWide({
     required this.isFirst,
@@ -777,6 +781,7 @@ class _TimelineItemWide extends StatelessWidget {
     required this.transportIcon,
     required this.transportLabel,
     required this.onOpenMenu,
+    required this.onTapMemo,
   });
 
   @override
@@ -844,31 +849,34 @@ class _TimelineItemWide extends StatelessWidget {
                       style: const TextStyle(fontSize: 13),
                     ),
                   ],
-                  if (memoText.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'メモ: ',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                        Expanded(
-                          child: Text(
-                            memoText,
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ],
+if (memoText.isNotEmpty) ...[
+  const SizedBox(height: 10),
+  InkWell(
+    onTap: onTapMemo,
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'メモ: ',
+          style: TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+        Expanded(
+          child: Text(
+            memoText,
+            maxLines: 1,
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+],
+    ],
               ),
             ),
           ),
@@ -1189,15 +1197,38 @@ class _MemoDialog extends StatelessWidget {
         ),
       ),
       actions: [
-        if (hasMemo)
-          TextButton(
-            onPressed:
-                () => Navigator.pop(
-                  context,
-                  const _MemoResult(_MemoAction.delete),
-                ),
-            child: const Text('削除'),
-          ),
+if (hasMemo)
+  TextButton(
+    onPressed: () async {
+      final result = await showDialog<bool>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('確認'),
+            content: const Text('メモを削除しますか？'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('キャンセル'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('削除'),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (result == true) {
+        Navigator.pop(
+          context,
+          const _MemoResult(_MemoAction.delete),
+        );
+      }
+    },
+    child: const Text('削除'),
+  ),
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: const Text('キャンセル'),

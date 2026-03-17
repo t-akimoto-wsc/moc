@@ -46,7 +46,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery
+        .of(context)
+        .size
+        .width;
     final bool showAppName = width >= 360;
     final double leftWidth = showAppName ? 170 : 64;
 
@@ -194,7 +197,24 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: _bg,
       appBar: _buildAppBar(context),
-      body: _responsiveBody(),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/login_bg.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          Positioned.fill(
+            child: Container(
+              color: Colors.white.withOpacity(0.85),
+            ),
+          ),
+
+          _responsiveBody(),
+        ],
+      ),
     );
   }
 }
