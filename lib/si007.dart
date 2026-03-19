@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/resort_header.dart';
 
 import 'si002.dart' as screen002;
 import 'si009.dart' as screen009;
@@ -48,51 +49,9 @@ class _Screen007PageState extends State<Screen007Page> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final bool showAppName = width >= 360;
-    final double leftWidth = showAppName ? 170 : 64;
-
-    return AppBar(
-      backgroundColor: _bg,
-      surfaceTintColor: _bg,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      titleSpacing: 0,
-
-      // 左：ロゴ＋旅リアン
-      leadingWidth: leftWidth,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 12),
-        child: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 28,
-              fit: BoxFit.contain,
-              errorBuilder:
-                  (_, __, ___) => const Icon(Icons.image_not_supported),
-            ),
-            if (showAppName) ...[
-              const SizedBox(width: 6),
-              const Text(
-                '旅リアン',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ],
-        ),
-      ),
-
-      // ✅ 右上に出るメニューの温床は actions / flexibleSpace / title内Row右側
-      // ✅ ここでは「actions を空固定」し、右側に何も出ないことを保証する
-      actions: const [],
-
-      // ✅ タイトルはAppBarの正規のtitleを使う（flexibleSpaceは使わない）
-      centerTitle: true,
-      title: const Text(
-        'プロフィール',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-      ),
+    return const ResortHeader(
+      title: 'プロフィール',
+      actions: [],
     );
   }
 
@@ -239,21 +198,21 @@ class _Screen007PageState extends State<Screen007Page> {
                   child: TextButton(
                     onPressed: _logoutToLogin,
                     style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      minimumSize: const Size(0, 0),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    minimumSize: const Size(0, 0),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    child: const Text(
+                      'ログアウト',
+                      style: TextStyle(
+                        fontSize: 12,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
                   ),
-                  child: const Text(
-                    'ログアウト',
-                    style: TextStyle(
-                    fontSize: 12,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
                 ),
                 const SizedBox(height: 8),
               ],

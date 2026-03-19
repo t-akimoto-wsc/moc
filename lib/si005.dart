@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'si002.dart' as screen002;
+import 'widgets/resort_header.dart';
 import 'si003.dart' as screen003;
 import 'si004.dart' as screen004;
 import 'si006.dart' as screen006;
@@ -7,17 +7,17 @@ import 'si006.dart' as screen006;
 /// ===============================
 /// 遷移元種別
 /// ===============================
-enum OtpFrom {
-  PasswordReset,
-  RegisterScreen,
-}
+enum OtpFrom { PasswordReset, RegisterScreen }
 
 /// ===============================
 /// 単体起動用 main()
 /// ===============================
 void main() {
   runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: OtpScreen(from: OtpFrom.RegisterScreen)),
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: OtpScreen(from: OtpFrom.RegisterScreen),
+    ),
   );
 }
 
@@ -53,16 +53,12 @@ class _OtpScreenState extends State<OtpScreen> {
     if (widget.from == OtpFrom.RegisterScreen) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const screen004.RegisterScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const screen004.RegisterScreen()),
       );
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const screen003.PasswordReset(),
-        ),
+        MaterialPageRoute(builder: (_) => const screen003.PasswordReset()),
       );
     }
   }
@@ -71,49 +67,7 @@ class _OtpScreenState extends State<OtpScreen> {
   // AppBar（左上ロゴのみ＋中央タイトル）
   // =========================
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final bool showAppName = width >= 360;
-    final double leftWidth = showAppName ? 170 : 64;
-
-    return AppBar(
-      automaticallyImplyLeading: false,
-      titleSpacing: 0,
-      leadingWidth: leftWidth,
-
-      // 左上：ロゴ + アプリ名
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 12),
-        child: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 28,
-              fit: BoxFit.contain,
-              errorBuilder:
-                  (_, __, ___) => const Icon(Icons.image_not_supported),
-            ),
-            if (showAppName) ...[
-              const SizedBox(width: 6),
-              const Text(
-                '旅リアン',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ],
-        ),
-      ),
-
-      // 中央タイトル
-      title: const SizedBox.shrink(),
-      flexibleSpace: const SafeArea(
-        child: Center(
-          child: Text(
-            'ワンタイムパス入力',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
-        ),
-      ),
-    );
+    return const ResortHeader(title: 'ワンタイムパス入力');
   }
 
   // =========================
@@ -133,9 +87,7 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() => message = null);
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => const screen006.PasswordSetScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const screen006.PasswordSetScreen()),
     );
   }
 

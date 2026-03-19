@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'widgets/resort_header.dart';
 
 import 'constants.dart';
 
@@ -56,26 +57,15 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
   // AppBar（戻る＋中央タイトル）
   // =========================
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: _bg,
-      surfaceTintColor: _bg,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      titleSpacing: 0,
+    return ResortHeader(
+      title: 'パスワード変更',
+      showBrand: false,
       leading: IconButton(
         tooltip: '戻る',
         icon: const Icon(Icons.arrow_back),
         onPressed: () => Navigator.pop(context),
       ),
-      title: const SizedBox.shrink(),
-      flexibleSpace: const SafeArea(
-        child: Center(
-          child: Text(
-            'パスワード変更',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
-        ),
-      ),
+      leadingWidth: 56,
     );
   }
 
@@ -114,8 +104,9 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
   String? _validateConfirmPassword(String? v) {
     final t = (v ?? '').trim();
     if (t.isEmpty) return AppMessages.errorEmptyConfirmPassword;
-    if (t != newPasswordController.text.trim())
+    if (t != newPasswordController.text.trim()) {
       return AppMessages.errorNotMatch;
+    }
     return null;
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/resort_header.dart';
 
 // ✅ alias で明示（衝突・参照ミス防止）
 import 'si007.dart' as screen007;
@@ -233,51 +234,9 @@ class _Si010PageState extends State<Si010Page> {
     final bool showAppName = width >= 360;
     final double leftWidth = showAppName ? (width * 0.38).clamp(120, 180) : 64;
 
-    return AppBar(
-      titleSpacing: 0,
-      automaticallyImplyLeading: false,
+    return ResortHeader(
+      title: '旅行スケジュール',
       leadingWidth: leftWidth,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 12),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 28,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.image_not_supported);
-              },
-            ),
-            if (showAppName) ...[
-              const SizedBox(width: 6),
-              const Flexible(
-                child: Text(
-                  '旅リアン',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-      title: const SizedBox.shrink(),
-      flexibleSpace: SafeArea(
-        child: Stack(
-          children: const [
-            Center(
-              child: Text(
-                '旅行スケジュール',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -311,7 +270,6 @@ class _Si010PageState extends State<Si010Page> {
     });
     await _addScheduleEntry(_days.length - 1);
   }
-  
 
   bool _sameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
@@ -326,7 +284,6 @@ class _Si010PageState extends State<Si010Page> {
       _isDirty = true;
     });
   }
-
 
   int _entrySort(ScheduleEntryDraft a, ScheduleEntryDraft b) {
     final ta = a.time;
@@ -390,10 +347,10 @@ class _Si010PageState extends State<Si010Page> {
     final ok = await _confirmDelete('この予定を削除しますか？');
     if (!ok) return;
 
-  setState(() {
-     _days[dayIndex].entries[entryIndex].dispose();
-     _days[dayIndex].entries.removeAt(entryIndex);
-     _isDirty = true;
+    setState(() {
+      _days[dayIndex].entries[entryIndex].dispose();
+      _days[dayIndex].entries.removeAt(entryIndex);
+      _isDirty = true;
     });
   }
 
@@ -519,28 +476,28 @@ class _Si010PageState extends State<Si010Page> {
   }
 
   Future<bool> _confirmDelete(String message) async {
-  final bool? result = await showDialog<bool>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('削除確認'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('キャンセル'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('削除'),
-          ),
-        ],
-      );
-    },
-  );
+    final bool? result = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('削除確認'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('キャンセル'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('削除'),
+            ),
+          ],
+        );
+      },
+    );
 
-  return result ?? false;
-}
+    return result ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -849,34 +806,34 @@ class _TimelineItemWide extends StatelessWidget {
                       style: const TextStyle(fontSize: 13),
                     ),
                   ],
-if (memoText.isNotEmpty) ...[
-  const SizedBox(height: 10),
-  InkWell(
-    onTap: onTapMemo,
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'メモ: ',
-          style: TextStyle(fontSize: 12, color: Colors.grey),
-        ),
-        Expanded(
-          child: Text(
-            memoText,
-            maxLines: 1,
-            softWrap: true,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
-          ),
-        ),
-      ],
-    ),
-  ),
-],
-    ],
+                  if (memoText.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    InkWell(
+                      onTap: onTapMemo,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'メモ: ',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                          Expanded(
+                            child: Text(
+                              memoText,
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
           ),
@@ -1107,7 +1064,7 @@ class _AddOrEditScheduleEntryDialogState
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
-                  value: _transport,
+                  initialValue: _transport,
                   items:
                       widget.transportOptions
                           .map(
@@ -1197,38 +1154,35 @@ class _MemoDialog extends StatelessWidget {
         ),
       ),
       actions: [
-if (hasMemo)
-  TextButton(
-    onPressed: () async {
-      final result = await showDialog<bool>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('確認'),
-            content: const Text('メモを削除しますか？'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('キャンセル'),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('削除'),
-              ),
-            ],
-          );
-        },
-      );
+        if (hasMemo)
+          TextButton(
+            onPressed: () async {
+              final result = await showDialog<bool>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('確認'),
+                    content: const Text('メモを削除しますか？'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('キャンセル'),
+                      ),
+                      FilledButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('削除'),
+                      ),
+                    ],
+                  );
+                },
+              );
 
-      if (result == true) {
-        Navigator.pop(
-          context,
-          const _MemoResult(_MemoAction.delete),
-        );
-      }
-    },
-    child: const Text('削除'),
-  ),
+              if (result == true) {
+                Navigator.pop(context, const _MemoResult(_MemoAction.delete));
+              }
+            },
+            child: const Text('削除'),
+          ),
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: const Text('キャンセル'),

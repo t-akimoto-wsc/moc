@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/resort_header.dart';
 
 import 'si003.dart' as screen003;
 import 'si004.dart' as screen004;
@@ -46,51 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    final bool showAppName = width >= 360;
-    final double leftWidth = showAppName ? 170 : 64;
-
-    return AppBar(
-      backgroundColor: _bg,
-      surfaceTintColor: _bg,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      titleSpacing: 0,
-      leadingWidth: leftWidth,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 12),
-        child: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 28,
-              fit: BoxFit.contain,
-              errorBuilder:
-                  (_, __, ___) => const Icon(Icons.image_not_supported),
-            ),
-            if (showAppName) ...[
-              const SizedBox(width: 6),
-              const Text(
-                '旅リアン',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ],
-        ),
-      ),
-      title: const SizedBox.shrink(),
-      flexibleSpace: const SafeArea(
-        child: Center(
-          child: Text(
-            'ログイン',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
-        ),
-      ),
-    );
+    return const ResortHeader(title: 'ログイン');
   }
 
   Widget _responsiveBody() {
@@ -200,16 +157,11 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset(
-              'assets/images/login_bg.png',
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset('assets/images/login_bg.png', fit: BoxFit.cover),
           ),
 
           Positioned.fill(
-            child: Container(
-              color: Colors.white.withOpacity(0.85),
-            ),
+            child: Container(color: Colors.white.withOpacity(0.85)),
           ),
 
           _responsiveBody(),

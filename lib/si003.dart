@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/resort_header.dart';
 import 'si002.dart' as screen002;
 import 'si005.dart' as screen005;
 
@@ -37,45 +38,7 @@ class _PasswordResetState extends State<PasswordReset> {
 
   // AppBar（左上ロゴ＋アプリ名、中央タイトル完全中央）
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final bool showAppName = width >= 360;
-    final double leftWidth = showAppName ? 170 : 64;
-
-    return AppBar(
-      automaticallyImplyLeading: false,
-      titleSpacing: 0,
-      leadingWidth: leftWidth,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 12),
-        child: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 28,
-              fit: BoxFit.contain,
-              errorBuilder:
-                  (_, __, ___) => const Icon(Icons.image_not_supported),
-            ),
-            if (showAppName) ...[
-              const SizedBox(width: 6),
-              const Text(
-                '旅リアン',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ],
-        ),
-      ),
-      title: const SizedBox.shrink(),
-      flexibleSpace: const SafeArea(
-        child: Center(
-          child: Text(
-            'パスワード再設定',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
-        ),
-      ),
-    );
+    return const ResortHeader(title: 'パスワード再設定');
   }
 
   // ✅ モック：ボタン押したら必ず OTP へ
@@ -84,7 +47,10 @@ class _PasswordResetState extends State<PasswordReset> {
     setState(() => message = null);
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => screen005.OtpScreen(from: screen005.OtpFrom.PasswordReset)),
+      MaterialPageRoute(
+        builder:
+            (_) => screen005.OtpScreen(from: screen005.OtpFrom.PasswordReset),
+      ),
     );
   }
 

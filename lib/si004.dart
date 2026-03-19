@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/resort_header.dart';
 import 'si002.dart' as screen002;
 import 'si005.dart' as screen005;
 
@@ -30,53 +31,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final bool showAppName = width >= 360;
-    final double leftWidth = showAppName ? 170 : 64;
-
-    return AppBar(
-      backgroundColor: _bg,
-      surfaceTintColor: _bg,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      titleSpacing: 0,
-      leadingWidth: leftWidth,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 12),
-        child: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 28,
-              fit: BoxFit.contain,
-            ),
-            if (showAppName) ...[
-              const SizedBox(width: 6),
-              const Text(
-                '旅リアン',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ],
-        ),
-      ),
-      title: const SizedBox.shrink(),
-      flexibleSpace: const SafeArea(
-        child: Center(
-          child: Text(
-            'アカウント作成',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
-        ),
-      ),
-    );
+    return const ResortHeader(title: 'アカウント作成');
   }
 
   void _goToOtpMock() {
     // ✅ 設計の流れに合わせて SI005（OTP入力）へ
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => screen005.OtpScreen(from: screen005.OtpFrom.RegisterScreen)),
+      MaterialPageRoute(
+        builder:
+            (_) => screen005.OtpScreen(from: screen005.OtpFrom.RegisterScreen),
+      ),
     );
   }
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'widgets/resort_header.dart';
 
 import 'constants.dart';
 import 'si002.dart' as screen002;
@@ -84,52 +85,7 @@ class _PasswordSetScreenState extends State<PasswordSetScreen> {
   // AppBar（左上ロゴのみ＋中央タイトル）
   // =========================
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final bool showAppName = width >= 360;
-    final double leftWidth = showAppName ? 170 : 64;
-
-    return AppBar(
-      backgroundColor: _bg,
-      surfaceTintColor: _bg,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      titleSpacing: 0,
-      leadingWidth: leftWidth,
-
-      // 左上：ロゴ + アプリ名（ここだけ）
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 12),
-        child: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 28,
-              fit: BoxFit.contain,
-              errorBuilder:
-                  (_, __, ___) => const Icon(Icons.image_not_supported),
-            ),
-            if (showAppName) ...[
-              const SizedBox(width: 6),
-              const Text(
-                '旅リアン',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ],
-        ),
-      ),
-
-      // 中央タイトル（完全中央）
-      title: const SizedBox.shrink(),
-      flexibleSpace: const SafeArea(
-        child: Center(
-          child: Text(
-            'パスワード設定',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
-        ),
-      ),
-    );
+    return const ResortHeader(title: 'パスワード設定');
   }
 
   // =========================

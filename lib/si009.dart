@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'widgets/resort_header.dart';
 
 import 'si007.dart' as screen007;
 import 'si010.dart';
 
-const String kAppLogoAsset = 'assets/images/logo.png';
 const double kBottomNavHeight = 64;
 
 void main() {
@@ -259,34 +259,6 @@ class _TripPlanListPageState extends State<TripPlanListPage> {
     return false;
   }
 
-  Widget _buildLeadingBrand() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Image.asset(
-          kAppLogoAsset,
-          height: 26,
-          fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported),
-        ),
-        const SizedBox(width: 8),
-        const Text(
-          '旅リアン',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCenterTitle() {
-    return const Text(
-      'スケジュールリスト',
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-    );
-  }
-
   Widget _buildSortMenu() {
     return PopupMenuButton<SortType>(
       icon: const Icon(Icons.sort),
@@ -334,15 +306,8 @@ class _TripPlanListPageState extends State<TripPlanListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
-        titleSpacing: 0,
-        leadingWidth: 140,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: _buildLeadingBrand(),
-        ),
-        centerTitle: true,
-        title: _buildCenterTitle(),
+      appBar: ResortHeader(
+        title: 'スケジュールリスト',
         actions: [_buildSortMenu()],
       ),
       floatingActionButton: FloatingActionButton(

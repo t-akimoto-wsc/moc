@@ -1,5 +1,6 @@
 // SI010_2.dart
 import 'package:flutter/material.dart';
+import 'widgets/resort_header.dart';
 
 void main() {
   runApp(const _Si010RunnerApp());
@@ -447,10 +448,7 @@ class _Si010_2PageState extends State<Si010_2Page> {
         await _handleBack();
       },
       child: Scaffold(
-        appBar: AppBar(
-          titleSpacing: 0,
-          title: const CommonLogo(iconSize: 36, fontSize: 16),
-        ),
+        appBar: const ResortHeader(title: '旅行スケジュール'),
         body: SafeArea(
           child: Form(
             key: _formKey,
@@ -531,7 +529,7 @@ class _Si010_2PageState extends State<Si010_2Page> {
                       const SizedBox(height: 10),
 
                       DropdownButtonFormField<String>(
-                        value: _transport,
+                        initialValue: _transport,
                         items:
                             _transportOptions
                                 .map(
@@ -992,7 +990,7 @@ class _AddOrEditEntryDialogState extends State<_AddOrEditEntryDialog> {
                 const SizedBox(height: 12),
 
                 DropdownButtonFormField<String>(
-                  value: _type,
+                  initialValue: _type,
                   items:
                       widget.typeOptions
                           .map(
@@ -1011,7 +1009,7 @@ class _AddOrEditEntryDialogState extends State<_AddOrEditEntryDialog> {
                 const SizedBox(height: 12),
 
                 DropdownButtonFormField<String>(
-                  value: _transport,
+                  initialValue: _transport,
                   items:
                       widget.transportOptions
                           .map(
