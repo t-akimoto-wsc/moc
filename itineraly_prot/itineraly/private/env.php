@@ -1,2 +1,0 @@
-<?php
-define('JWT_SECRET_KEY', 'a-string-secret-at-least-256-bits-long');
