@@ -1,63 +1,137 @@
 import 'package:flutter/material.dart';
-import 'widgets/common_logo_positioned.dart' as logo_positioned;
+import 'widgets/resort_header.dart';
 import 'si002.dart' as screen002;
+import 'si005.dart' as screen005;
 
-class PasswordReset extends StatelessWidget {
+// ===============================
+// 単体起動用 main()
+// ===============================
+void main() {
+  runApp(
+    const MaterialApp(debugShowCheckedModeBanner: false, home: PasswordReset()),
+  );
+}
+
+/// =======================================
+/// SI003（モック）パスワード再設定
+/// - 送信ボタン押下 → SI005(OTP)へ遷移（モックなので入力チェックしない）
+/// - クラス名は呼び出し側に合わせて PasswordReset 固定
+/// =======================================
+class PasswordReset extends StatefulWidget {
   const PasswordReset({super.key});
+
+  @override
+  State<PasswordReset> createState() => _PasswordResetState();
+}
+
+class _PasswordResetState extends State<PasswordReset> {
+  final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+
+  String? message;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
+  // AppBar（左上ロゴ＋アプリ名、中央タイトル完全中央）
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return const ResortHeader(title: 'パスワード再設定');
+  }
+
+  // ✅ モック：ボタン押したら必ず OTP へ
+  void _onSendMock() {
+    FocusScope.of(context).unfocus();
+    setState(() => message = null);
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder:
+            (_) => screen005.OtpScreen(from: screen005.OtpFrom.PasswordReset),
+      ),
+    );
+  }
+
+  void _goToLogin() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const screen002.LoginScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          const logo_positioned.CommonLogoPositioned(),
-          const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.construction,
-                  size: 80,
-                  color: Colors.orangeAccent,
-                ),
-                SizedBox(height: 20),
-                Text(
-                  'この画面は現在作成中です。',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'しばらくお待ちください。',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 30,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const screen002.LoginScreen(),
+      appBar: _buildAppBar(context),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            const double maxWidth = 520;
+
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: maxWidth),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 40),
+
+                        // 仕様上は必須入力だけど、モックでは遷移条件にしない
+                        TextFormField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          maxLength: 256,
+                          decoration: const InputDecoration(
+                            hintText: 'メールアドレス',
+                            border: UnderlineInputBorder(),
+                            counterText: '',
+                          ),
+                          onChanged: (_) {
+                            if (message != null) setState(() => message = null);
+                          },
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        if (message != null)
+                          Text(
+                            message!,
+                            style: const TextStyle(color: Colors.red),
+                            textAlign: TextAlign.center,
+                          ),
+
+                        const SizedBox(height: 24),
+
+                        SizedBox(
+                          width: 220,
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed: _onSendMock,
+                            child: const Text('送信'),
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        TextButton(
+                          onPressed: _goToLogin,
+                          child: const Text('ログイン画面へ戻る'),
+                        ),
+
+                        const SizedBox(height: 40),
+                      ],
                     ),
-                  );
-                },
-                child: const Text('ログイン画面へ戻る'),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }

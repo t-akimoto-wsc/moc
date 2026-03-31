@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "itineraly_prot" "\0"
+            VALUE "FileDescription", "trip_mock" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "itineraly_prot" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "itineraly_prot.exe" "\0"
-            VALUE "ProductName", "itineraly_prot" "\0"
+            VALUE "InternalName", "trip_mock" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
+            VALUE "OriginalFilename", "trip_mock.exe" "\0"
+            VALUE "ProductName", "trip_mock" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -1,6 +1,6 @@
 {
-    "name": "itineraly_prot",
-    "short_name": "itineraly_prot",
+    "name": "trip_mock",
+    "short_name": "trip_mock",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
